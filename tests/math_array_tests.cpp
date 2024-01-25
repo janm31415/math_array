@@ -77,10 +77,104 @@ namespace
   };
 
   template <class T>
+  struct multiply_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = a2 * b2;
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(a2[i] * b2[i], res2[i]);
+      auto res3 = a3 * b3;
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(a3[i] * b3[i], res3[i]);
+      auto res4 = a4 * b4;
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(a4[i] * b4[i], res4[i]);
+      auto resn = an * bn;
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(an[i] * bn[i], resn[i]);
+
+      res2 = a2 * static_cast<T>(2);
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(a2[i] * 2, res2[i]);
+      res3 = a3 * static_cast<T>(2);
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(a3[i] * 2, res3[i]);
+      res4 = a4 * static_cast<T>(2);
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(a4[i] * 2, res4[i]);
+      resn = an * static_cast<T>(2);
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(an[i] * 2, resn[i]);
+
+      res2 = static_cast<T>(2) * b2;
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(2 * b2[i], res2[i]);
+      res3 = static_cast<T>(2) * b3;
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(2 * b3[i], res3[i]);
+      res4 = static_cast<T>(2) * b4;
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(2 * b4[i], res4[i]);
+      resn = static_cast<T>(2) * bn;
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(2 * bn[i], resn[i]);
+    }
+  };
+
+  template <class T>
+  struct divide_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = a2 / b2;
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(a2[i] / b2[i], res2[i]);
+      auto res3 = a3 / b3;
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(a3[i] / b3[i], res3[i]);
+      auto res4 = a4 / b4;
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(a4[i] / b4[i], res4[i]);
+      auto resn = an / bn;
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(an[i] / bn[i], resn[i]);
+
+      res2 = a2 / static_cast<T>(2);
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(a2[i] / 2, res2[i]);
+      res3 = a3 / static_cast<T>(2);
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(a3[i] / 2, res3[i]);
+      res4 = a4 / static_cast<T>(2);
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(a4[i] / 2, res4[i]);
+      resn = an / static_cast<T>(2);
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(an[i] / 2, resn[i]);
+
+      res2 = static_cast<T>(2) / b2;
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(2 / b2[i], res2[i]);
+      res3 = static_cast<T>(2) / b3;
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(2 / b3[i], res3[i]);
+      res4 = static_cast<T>(2) / b4;
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(2 / b4[i], res4[i]);
+      resn = static_cast<T>(2) / bn;
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(2 / bn[i], resn[i]);
+    }
+  };
+
+  template <class T>
   void run_typed_math_array_tests()
   {
     add_vectors<T>().test();
     subtract_vectors<T>().test();
+    multiply_vectors<T>().test();
+    divide_vectors<T>().test();
   }
 }
 
