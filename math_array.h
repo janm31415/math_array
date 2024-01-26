@@ -541,7 +541,7 @@ T distance_sqr(const std::array<T, dim> a, const std::array<T, dim> b) {
 template <class T, std::size_t dim>
 std::array<T, dim> normalize(const std::array<T, dim> a) {
   T denom = static_cast<T>(sqrt(dot(a, a)));
-  return denom != static_cast<T>(0) ? a / denom : a;
+  return !(denom == static_cast<T>(0)) ? a / denom : a;
 }
 
 ////////////////////////////////
@@ -656,4 +656,13 @@ bool operator >= (const std::array<T, 3> a, const std::array<T, 3> b) {
 template <class T>
 bool operator >= (const std::array<T, 4> a, const std::array<T, 4> b) {
   return !(a < b);
+}
+
+////////////////////////////////
+// operator cross
+////////////////////////////////
+
+template <class T>
+std::array<T, 3> cross(const std::array<T, 3> a, const std::array<T, 3> b) {
+  return {a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]};
 }

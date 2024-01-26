@@ -5,8 +5,6 @@
 
 #define NDIM 10
 
-//using namespace ma;
-
 namespace custom_stuff
 {
 
@@ -23,10 +21,6 @@ namespace custom_stuff
       bool operator < (const custom_object& other) const
         {
         return _value < other._value;
-        }
-      bool operator != (const custom_object& other) const
-        {
-        return !(other == *this);
         }
       custom_object operator - () const
         {
@@ -494,7 +488,19 @@ namespace {
     TEST_ASSERT((this->a2 <= this->b2));
     TEST_ASSERT((this->a3 <= this->b3));
     TEST_ASSERT((this->a4 <= this->b4));
-    TEST_ASSERT((this->an <= this->bn));    
+    TEST_ASSERT((this->an <= this->bn));
+    }
+  };
+  
+  template <class T>
+  struct cross_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+    auto res3 = cross(this->a3, this->b3);
+    TEST_EQ(this->a3[1]*this->b3[2] - this->a3[2]*this->b3[1], res3[0]);
+    TEST_EQ(this->a3[2]*this->b3[0] - this->a3[0]*this->b3[2], res3[1]);
+    TEST_EQ(this->a3[0]*this->b3[1] - this->a3[1]*this->b3[0], res3[2]);
     }
   };
   
@@ -515,6 +521,7 @@ namespace {
     distance_sqr_vectors<T>().test();
     normalize_vectors<T>().test();
     compare_vectors<T>().test();
+    cross_vectors<T>().test();
   }
 } // anonymous namespace
 

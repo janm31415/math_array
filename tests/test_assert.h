@@ -44,7 +44,7 @@ void TestEqStr(const char *expval, const char *val, const char *file, int line);
 template<typename T, typename U>
 void TestEq(T expval, U val, const char *file, int line, const char *func = 0)
   {
-  if (U(expval) != val)
+  if (!(U(expval) == val))
     {
     std::stringstream ss1;
     ss1 << expval;
