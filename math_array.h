@@ -3,9 +3,6 @@
 #include <array>
 #include <cmath>
 
-//namespace ma
-//  {
-
 ////////////////////////////////
 // operator +
 ////////////////////////////////
@@ -537,4 +534,126 @@ T distance_sqr(const std::array<T, dim> a, const std::array<T, dim> b) {
   return dot(c,c);
 }
 
-//  } // namespace
+////////////////////////////////
+// operator normalize
+////////////////////////////////
+
+template <class T, std::size_t dim>
+std::array<T, dim> normalize(const std::array<T, dim> a) {
+  T denom = static_cast<T>(sqrt(dot(a, a)));
+  return denom != static_cast<T>(0) ? a / denom : a;
+}
+
+////////////////////////////////
+// operator <
+////////////////////////////////
+
+template <class T>
+bool operator < (const std::array<T, 2> a, const std::array<T, 2> b) {
+  return (a[0] == b[0]) ? (a[1] < b[1]) : (a[0] < b[0]);
+}
+
+template <class T>
+bool operator < (const std::array<T, 3> a, const std::array<T, 3> b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] < b[2]) : (a[1] < b[1])) : (a[0] < b[0]);
+}
+
+template <class T>
+bool operator < (const std::array<T, 4> a, const std::array<T, 4> b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] == b[2] ? a[3] < b[3] : a[2] < b[2]) : (a[1] < b[1])) : (a[0] < b[0]);
+}
+
+////////////////////////////////
+// operator >
+////////////////////////////////
+
+template <class T>
+bool operator > (const std::array<T, 2> a, const std::array<T, 2> b) {
+  return (a[0] == b[0]) ? (b[1] < a[1]) : (b[0] < a[0]);
+}
+
+template <class T>
+bool operator > (const std::array<T, 3> a, const std::array<T, 3> b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (b[2] < a[2]) : (b[1] < a[1])) : (b[0] < a[0]);
+}
+
+template <class T>
+bool operator > (const std::array<T, 4> a, const std::array<T, 4> b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] == b[2] ? b[3] < a[3] : b[2] < a[2]) : (b[1] < a[1])) : (b[0] < a[0]);
+}
+
+////////////////////////////////
+// operator ==
+////////////////////////////////
+
+template <class T>
+bool operator == (const std::array<T, 2> a, const std::array<T, 2> b) {
+  return (a[0] == b[0]) && (a[1] == b[1]);
+}
+
+template <class T>
+bool operator == (const std::array<T, 3> a, const std::array<T, 3> b) {
+  return (a[0] == b[0]) && (a[1] == b[1]) && (a[2] == b[2]);
+}
+
+template <class T>
+bool operator == (const std::array<T, 4> a, const std::array<T, 4> b) {
+  return (a[0] == b[0]) && (a[1] == b[1]) && (a[2] == b[2]) && (a[3] == b[3]);
+}
+
+////////////////////////////////
+// operator !=
+////////////////////////////////
+
+template <class T>
+bool operator != (const std::array<T, 2> a, const std::array<T, 2> b) {
+  return (a[0] != b[0]) || (a[1] != b[1]);
+}
+
+template <class T>
+bool operator != (const std::array<T, 3> a, const std::array<T, 3> b) {
+  return (a[0] != b[0]) || (a[1] != b[1]) || (a[2] != b[2]);
+}
+
+template <class T>
+bool operator != (const std::array<T, 4> a, const std::array<T, 4> b) {
+  return (a[0] != b[0]) || (a[1] != b[1]) || (a[2] != b[2]) || (a[3] != b[3]);
+}
+
+////////////////////////////////
+// operator <=
+////////////////////////////////
+
+template <class T>
+bool operator <= (const std::array<T, 2> a, const std::array<T, 2> b) {
+  return !(a > b);
+}
+
+template <class T>
+bool operator <= (const std::array<T, 3> a, const std::array<T, 3> b) {
+  return !(a > b);
+}
+
+template <class T>
+bool operator <= (const std::array<T, 4> a, const std::array<T, 4> b) {
+  return !(a > b);
+}
+
+////////////////////////////////
+// operator >=
+////////////////////////////////
+
+template <class T>
+bool operator >= (const std::array<T, 2> a, const std::array<T, 2> b) {
+  return !(a < b);
+}
+
+template <class T>
+bool operator >= (const std::array<T, 3> a, const std::array<T, 3> b) {
+  return !(a < b);
+}
+
+template <class T>
+bool operator >= (const std::array<T, 4> a, const std::array<T, 4> b) {
+  return !(a < b);
+}

@@ -62,7 +62,7 @@ namespace custom_stuff
       return stream;
       }
 
-}
+} // namespace custom_stuff
 
 namespace {
   template <class T>
@@ -428,7 +428,75 @@ namespace {
       auto resn = distance_sqr(this->an, this->bn);
       TEST_EQ(dot(this->an-this->bn, this->an-this->bn), resn);
     }
-  };   
+  };
+  
+  template <class T>
+  struct normalize_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = normalize(this->a2);
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(static_cast<T>(this->a2[i])/static_cast<T>(sqrt(dot(this->a2, this->a2))), res2[i]);
+      auto res3 = normalize(this->a3);
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(static_cast<T>(this->a3[i])/static_cast<T>(sqrt(dot(this->a3, this->a3))), res3[i]);
+      auto res4 = normalize(this->a4);
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(static_cast<T>(this->a4[i])/static_cast<T>(sqrt(dot(this->a4, this->a4))), res4[i]);
+      auto resn = normalize(this->an);
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(static_cast<T>(this->an[i])/static_cast<T>(sqrt(dot(this->an, this->an))), resn[i]);
+    }
+  };
+  
+  template <class T>
+  struct compare_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+    TEST_ASSERT(this->a2 == this->a2);
+    TEST_ASSERT(this->a3 == this->a3);
+    TEST_ASSERT(this->a4 == this->a4);
+    TEST_ASSERT(this->an == this->an);
+    TEST_ASSERT(!(this->a2 == this->b2));
+    TEST_ASSERT(!(this->a3 == this->b3));
+    TEST_ASSERT(!(this->a4 == this->b4));
+    TEST_ASSERT(!(this->an == this->bn));
+    TEST_ASSERT(!(this->a2 < this->a2));
+    TEST_ASSERT(!(this->a3 < this->a3));
+    TEST_ASSERT(!(this->a4 < this->a4));
+    TEST_ASSERT(!(this->an < this->an));
+    TEST_ASSERT(!(this->a2 > this->a2));
+    TEST_ASSERT(!(this->a3 > this->a3));
+    TEST_ASSERT(!(this->a4 > this->a4));
+    TEST_ASSERT(!(this->an > this->an));
+    TEST_ASSERT(this->a2 <= this->a2);
+    TEST_ASSERT(this->a3 <= this->a3);
+    TEST_ASSERT(this->a4 <= this->a4);
+    TEST_ASSERT(this->an <= this->an);
+    TEST_ASSERT(this->a2 >= this->a2);
+    TEST_ASSERT(this->a3 >= this->a3);
+    TEST_ASSERT(this->a4 >= this->a4);
+    TEST_ASSERT(this->an >= this->an);
+    TEST_ASSERT(!(this->a2 > this->b2));
+    TEST_ASSERT(!(this->a3 > this->b3));
+    TEST_ASSERT(!(this->a4 > this->b4));
+    TEST_ASSERT(!(this->an > this->bn));
+    TEST_ASSERT((this->a2 < this->b2));
+    TEST_ASSERT((this->a3 < this->b3));
+    TEST_ASSERT((this->a4 < this->b4));
+    TEST_ASSERT((this->an < this->bn));
+    TEST_ASSERT(!(this->a2 >= this->b2));
+    TEST_ASSERT(!(this->a3 >= this->b3));
+    TEST_ASSERT(!(this->a4 >= this->b4));
+    TEST_ASSERT(!(this->an >= this->bn));
+    TEST_ASSERT((this->a2 <= this->b2));
+    TEST_ASSERT((this->a3 <= this->b3));
+    TEST_ASSERT((this->a4 <= this->b4));
+    TEST_ASSERT((this->an <= this->bn));    
+    }
+  };
   
   template <class T>
   void run_typed_math_array_tests()
@@ -444,9 +512,11 @@ namespace {
     dot_vectors<T>().test();
     length_vectors<T>().test();
     distance_vectors<T>().test();
-    distance_sqr_vectors<T>().test();    
+    distance_sqr_vectors<T>().test();
+    normalize_vectors<T>().test();
+    compare_vectors<T>().test();
   }
-}
+} // anonymous namespace
 
 void run_math_array_tests()
 {
