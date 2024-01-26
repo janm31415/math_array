@@ -112,7 +112,7 @@ struct math_array4x4_fixture
     w = {{4,5,6,0}};
   }
   
-  array4x4<T> a, b, c;
+  ma::array4x4<T> a, b, c;
   std::array<T, 4> v, w;
 };
 
@@ -307,6 +307,7 @@ struct min_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = min(this->a2,this->b2);
     for (int i = 0; i < 2; ++i)
       TEST_EQ(this->a2[i] < this->b2[i] ? this->a2[i] : this->b2[i], res2[i]);
@@ -327,6 +328,7 @@ struct max_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = max(this->a2, this->b2);
     for (int i = 0; i < 2; ++i)
       TEST_EQ(this->a2[i] < this->b2[i] ? this->b2[i] : this->a2[i], res2[i]);
@@ -347,6 +349,7 @@ struct abs_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = abs(this->a2);
     for (int i = 0; i < 2; ++i)
       TEST_EQ(this->a2[i] < 0 ? -this->a2[i] : this->a2[i], res2[i]);
@@ -367,6 +370,7 @@ struct sqrt_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = sqrt(abs(this->a2));
     for (int i = 0; i < 2; ++i)
       TEST_EQ(static_cast<T>(sqrt(this->a2[i] < 0 ? -this->a2[i] : this->a2[i])), res2[i]);
@@ -387,6 +391,7 @@ struct dot_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = dot(this->a2, this->b2);
     TEST_EQ(this->a2[0]*this->b2[0] + this->a2[1]*this->b2[1], res2);
     auto res3 = dot(this->a3, this->b3);
@@ -406,6 +411,7 @@ struct length_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = length(this->a2);
     TEST_EQ(sqrt(dot(this->a2, this->a2)), res2);
     auto res3 = length(this->a3);
@@ -422,6 +428,7 @@ struct distance_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = distance(this->a2, this->b2);
     TEST_EQ(sqrt(dot(this->a2-this->b2, this->a2-this->b2)), res2);
     auto res3 = distance(this->a3, this->b3);
@@ -438,6 +445,7 @@ struct distance_sqr_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res2 = distance_sqr(this->a2, this->b2);
     TEST_EQ(dot(this->a2-this->b2, this->a2-this->b2), res2);
     auto res3 = distance_sqr(this->a3, this->b3);
@@ -454,6 +462,7 @@ struct normalize_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;  
     auto res2 = normalize(this->a2);
     for (int i = 0; i < 2; ++i)
       TEST_EQ(static_cast<T>(this->a2[i])/static_cast<T>(sqrt(dot(this->a2, this->a2))), res2[i]);
@@ -522,6 +531,7 @@ struct cross_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     auto res3 = cross(this->a3, this->b3);
     TEST_EQ(this->a3[1]*this->b3[2] - this->a3[2]*this->b3[1], res3[0]);
     TEST_EQ(this->a3[2]*this->b3[0] - this->a3[0]*this->b3[2], res3[1]);
@@ -572,6 +582,7 @@ struct min_horizontal_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     TEST_EQ(-1, min_horizontal(this->a2));
     TEST_EQ(-1, min_horizontal(this->a3));
     TEST_EQ(-1, min_horizontal(this->a4));
@@ -584,6 +595,7 @@ struct max_horizontal_vectors : public math_array_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     TEST_EQ(4, max_horizontal(this->a2));
     TEST_EQ(6, max_horizontal(this->a3));
     TEST_EQ(8, max_horizontal(this->a4));
@@ -594,6 +606,7 @@ struct max_horizontal_vectors : public math_array_fixture<T>
 template <class T>
 void test_transpose()
 {
+  using namespace ma;
   std::array<T, 4> c0 = {1, 2, 3, 4};
   std::array<T, 4> c1 = {5, 6, 7, 8};
   std::array<T, 4> c2 = {9, 10, 11, 12};
@@ -623,6 +636,7 @@ struct array4x4_tests : public math_array4x4_fixture<T>
 {
   void test()
   {
+    using namespace ma;
     for (int i = 0; i < 16; ++i)
       TEST_EQ(static_cast<T>(i+1), this->a[i]);
     array4x4<T> id = get_identity<T>();
@@ -680,6 +694,7 @@ struct array4x4_invert_tests<double> : public math_array4x4_fixture<double>
 {
   void test()
   {
+    using namespace ma;
     auto id = get_identity<double>();
     auto res = invert(this->c);
     auto res2 = matrix_matrix_multiply(res, this->c);
@@ -693,6 +708,7 @@ struct array4x4_invert_tests<float> : public math_array4x4_fixture<float>
 {
   void test()
   {
+    using namespace ma;
     auto id = get_identity<float>();
     auto res = invert(this->c);
     auto res2 = matrix_matrix_multiply(res, this->c);
@@ -729,6 +745,7 @@ void run_typed_math_array_tests()
 
 void run_all_lookat_tests()
 {
+  using namespace ma;
   std::mt19937 gen(0);
   std::uniform_real_distribution<> dis(0.0, 1.0);
   for (int i = 0; i < 10; ++i)
@@ -759,6 +776,7 @@ void run_all_lookat_tests()
 
 void run_all_quaternion_tests()
 {
+  using namespace ma;
   std::vector<float> rx, ry, rz;
   rx = {{0.0, 0.1, 0.2, 0.3, 0.4, -0.1, -0.2, -0.3, -0.4, 0.5, 0.6, 0.7, 0.8, 0.9, -0.5, -0.6, -0.7, -0.8, -0.9, 1.0}};
   ry = { {0.0, 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, -0.1, -0.1, -0.2, -0.2, -0.3, -0.3, -0.4, -0.4, 0.7, 0.8, 0.9, 1.0} };
@@ -962,6 +980,7 @@ inline void matrix_multiply(float* out, const float* left, const float* right)
 
 void test_array4x4()
 {
+  using namespace ma;
   array4x4<float> m, m2, m_inv, m_inv_inv;
   float inv[16];
   m = get_identity<float>();

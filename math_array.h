@@ -1,3 +1,26 @@
+/*
+ MIT License
+ 
+ Copyright (c) 2024 Jan Maes
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
 #pragma once
 
 #include <array>
@@ -44,6 +67,14 @@ template <class T, std::size_t dim>
 std::array<T, dim> operator / (const T s, const std::array<T, dim>& b) ;
 
 template <class T, std::size_t dim>
+std::array<T, dim> operator + (const std::array<T, dim>& a);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator - (const std::array<T, dim>& a);
+
+namespace ma
+{
+template <class T, std::size_t dim>
 std::array<T, dim> min(const std::array<T, dim>& a, const std::array<T, dim>& b);
 
 template <class T, std::size_t dim>
@@ -81,12 +112,6 @@ std::array<T, 3> cross(const std::array<T, 3>& a, const std::array<T, 3>& b);
 
 template <class T>
 std::array<T, 4> cross(const std::array<T, 4>& a, const std::array<T, 4>& b);
-
-template <class T, std::size_t dim>
-std::array<T, dim> operator + (const std::array<T, dim>& a);
-
-template <class T, std::size_t dim>
-std::array<T, dim> operator - (const std::array<T, dim>& a);
 
 template <class T, std::size_t dim>
 T min_horizontal(const std::array<T, dim>& a);
@@ -213,6 +238,12 @@ template <class T>
 array4x4<T> operator - (const array4x4<T>& left, const array4x4<T>& right);
 
 template <class T>
+array4x4<T> operator + (const array4x4<T>& a);
+
+template <class T>
+array4x4<T> operator - (const array4x4<T>& a);
+
+template <class T>
 array4x4<T> operator / (const array4x4<T>& left, const T value);
 
 template <class T>
@@ -262,6 +293,8 @@ std::array<T, 4> get_y_axis(const array4x4<T>& matrix);
 
 template <class T>
 std::array<T, 4> get_z_axis(const array4x4<T>& matrix);
+
+} // namespace ma
 
 ////////////////////////////////
 // IMPLEMENTATION
@@ -564,6 +597,159 @@ std::array<T, 4> operator / (const T s, const std::array<T, 4>& b) {
   return { s / b[0], s / b[1], s / b[2], s / b[3] };
 }
 
+
+////////////////////////////////
+// operator <
+////////////////////////////////
+
+template <class T>
+bool operator < (const std::array<T, 2>& a, const std::array<T, 2>& b) {
+  return (a[0] == b[0]) ? (a[1] < b[1]) : (a[0] < b[0]);
+}
+
+template <class T>
+bool operator < (const std::array<T, 3>& a, const std::array<T, 3>& b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] < b[2]) : (a[1] < b[1])) : (a[0] < b[0]);
+}
+
+template <class T>
+bool operator < (const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] == b[2] ? a[3] < b[3] : a[2] < b[2]) : (a[1] < b[1])) : (a[0] < b[0]);
+}
+
+////////////////////////////////
+// operator >
+////////////////////////////////
+
+template <class T>
+bool operator > (const std::array<T, 2>& a, const std::array<T, 2>& b) {
+  return (a[0] == b[0]) ? (b[1] < a[1]) : (b[0] < a[0]);
+}
+
+template <class T>
+bool operator > (const std::array<T, 3>& a, const std::array<T, 3>& b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (b[2] < a[2]) : (b[1] < a[1])) : (b[0] < a[0]);
+}
+
+template <class T>
+bool operator > (const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] == b[2] ? b[3] < a[3] : b[2] < a[2]) : (b[1] < a[1])) : (b[0] < a[0]);
+}
+
+////////////////////////////////
+// operator ==
+////////////////////////////////
+
+template <class T>
+bool operator == (const std::array<T, 2>& a, const std::array<T, 2>& b) {
+  return (a[0] == b[0]) && (a[1] == b[1]);
+}
+
+template <class T>
+bool operator == (const std::array<T, 3>& a, const std::array<T, 3>& b) {
+  return (a[0] == b[0]) && (a[1] == b[1]) && (a[2] == b[2]);
+}
+
+template <class T>
+bool operator == (const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return (a[0] == b[0]) && (a[1] == b[1]) && (a[2] == b[2]) && (a[3] == b[3]);
+}
+
+////////////////////////////////
+// operator !=
+////////////////////////////////
+
+template <class T>
+bool operator != (const std::array<T, 2>& a, const std::array<T, 2>& b) {
+  return (a[0] != b[0]) || (a[1] != b[1]);
+}
+
+template <class T>
+bool operator != (const std::array<T, 3>& a, const std::array<T, 3>& b) {
+  return (a[0] != b[0]) || (a[1] != b[1]) || (a[2] != b[2]);
+}
+
+template <class T>
+bool operator != (const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return (a[0] != b[0]) || (a[1] != b[1]) || (a[2] != b[2]) || (a[3] != b[3]);
+}
+
+////////////////////////////////
+// operator <=
+////////////////////////////////
+
+template <class T>
+bool operator <= (const std::array<T, 2>& a, const std::array<T, 2>& b) {
+  return !(a > b);
+}
+
+template <class T>
+bool operator <= (const std::array<T, 3>& a, const std::array<T, 3>& b) {
+  return !(a > b);
+}
+
+template <class T>
+bool operator <= (const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return !(a > b);
+}
+
+////////////////////////////////
+// operator >=
+////////////////////////////////
+
+template <class T>
+bool operator >= (const std::array<T, 2>& a, const std::array<T, 2>& b) {
+  return !(a < b);
+}
+
+template <class T>
+bool operator >= (const std::array<T, 3>& a, const std::array<T, 3>& b) {
+  return !(a < b);
+}
+
+template <class T>
+bool operator >= (const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return !(a < b);
+}
+
+////////////////////////////////
+// unary operator +
+////////////////////////////////
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator + (const std::array<T, dim>& a) {
+  return a;
+}
+
+////////////////////////////////
+// unary operator -
+////////////////////////////////
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator - (const std::array<T, dim>& a) {
+  std::array<T, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = -a[i];
+  return res;
+}
+
+template <class T>
+std::array<T, 2> operator - (const std::array<T, 2>& a) {
+  return { -a[0], -a[1]};
+}
+
+template <class T>
+std::array<T, 3> operator - (const std::array<T, 3>& a) {
+  return { -a[0], -a[1], -a[2]};
+}
+
+template <class T>
+std::array<T, 4> operator - (const std::array<T, 4>& a) {
+  return { -a[0], -a[1], -a[2], -a[3]};
+}
+
+namespace ma
+{
 ////////////////////////////////
 // operator min
 ////////////////////////////////
@@ -711,6 +897,7 @@ inline std::array<long double, 4> abs(const std::array<long double, 4>& a) {
 
 template <class T, std::size_t dim>
 std::array<T, dim> sqrt(const std::array<T, dim>& a) {
+  using ::sqrt;
   std::array<T, dim> res;
   for (std::size_t i = 0; i < dim; ++i)
     res[i] = static_cast<T>(sqrt(a[i]));
@@ -719,16 +906,19 @@ std::array<T, dim> sqrt(const std::array<T, dim>& a) {
 
 template <class T>
 std::array<T, 2> sqrt(const std::array<T, 2>& a) {
+  using ::sqrt;
   return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])) };
 }
 
 template <class T>
 std::array<T, 3> sqrt(const std::array<T, 3>& a) {
+  using ::sqrt;
   return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])), static_cast<T>(sqrt(a[2])) };
 }
 
 template <class T>
 std::array<T, 4> sqrt(const std::array<T, 4>& a) {
+  using ::sqrt;
   return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])), static_cast<T>(sqrt(a[2])), static_cast<T>(sqrt(a[3])) };
 }
 
@@ -765,11 +955,13 @@ T dot(const std::array<T, 4>& a, const std::array<T, 4>& b) {
 
 template <class T, std::size_t dim>
 double length(const std::array<T, dim>& a) {
+  using ::sqrt;
   return sqrt(dot(a,a));
 }
 
 template <std::size_t dim>
 float length(const std::array<float, dim> a) {
+  using ::sqrt;
   return sqrt(dot(a,a));
 }
 
@@ -779,12 +971,16 @@ float length(const std::array<float, dim> a) {
 
 template <class T, std::size_t dim>
 double distance(const std::array<T, dim>& a, const std::array<T, dim>& b) {
+  using ::operator-;
+  using ::sqrt;
   auto c = a-b;
   return sqrt(dot(c,c));
 }
 
 template <std::size_t dim>
 float distance(const std::array<float, dim>& a, const std::array<float, dim>& b) {
+  using ::operator-;
+  using ::sqrt;
   auto c = a-b;
   return sqrt(dot(c,c));
 }
@@ -795,6 +991,7 @@ float distance(const std::array<float, dim>& a, const std::array<float, dim>& b)
 
 template <class T, std::size_t dim>
 T distance_sqr(const std::array<T, dim>& a, const std::array<T, dim>& b) {
+  using ::operator-;
   auto c = a-b;
   return dot(c,c);
 }
@@ -805,122 +1002,10 @@ T distance_sqr(const std::array<T, dim>& a, const std::array<T, dim>& b) {
 
 template <class T, std::size_t dim>
 std::array<T, dim> normalize(const std::array<T, dim>& a) {
+  using ::sqrt;
+  using ::operator/;
   T denom = static_cast<T>(sqrt(dot(a, a)));
   return !(denom == static_cast<T>(0)) ? a / denom : a;
-}
-
-////////////////////////////////
-// operator <
-////////////////////////////////
-
-template <class T>
-bool operator < (const std::array<T, 2>& a, const std::array<T, 2>& b) {
-  return (a[0] == b[0]) ? (a[1] < b[1]) : (a[0] < b[0]);
-}
-
-template <class T>
-bool operator < (const std::array<T, 3>& a, const std::array<T, 3>& b) {
-  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] < b[2]) : (a[1] < b[1])) : (a[0] < b[0]);
-}
-
-template <class T>
-bool operator < (const std::array<T, 4>& a, const std::array<T, 4>& b) {
-  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] == b[2] ? a[3] < b[3] : a[2] < b[2]) : (a[1] < b[1])) : (a[0] < b[0]);
-}
-
-////////////////////////////////
-// operator >
-////////////////////////////////
-
-template <class T>
-bool operator > (const std::array<T, 2>& a, const std::array<T, 2>& b) {
-  return (a[0] == b[0]) ? (b[1] < a[1]) : (b[0] < a[0]);
-}
-
-template <class T>
-bool operator > (const std::array<T, 3>& a, const std::array<T, 3>& b) {
-  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (b[2] < a[2]) : (b[1] < a[1])) : (b[0] < a[0]);
-}
-
-template <class T>
-bool operator > (const std::array<T, 4>& a, const std::array<T, 4>& b) {
-  return (a[0] == b[0]) ? ((a[1] == b[1]) ? (a[2] == b[2] ? b[3] < a[3] : b[2] < a[2]) : (b[1] < a[1])) : (b[0] < a[0]);
-}
-
-////////////////////////////////
-// operator ==
-////////////////////////////////
-
-template <class T>
-bool operator == (const std::array<T, 2>& a, const std::array<T, 2>& b) {
-  return (a[0] == b[0]) && (a[1] == b[1]);
-}
-
-template <class T>
-bool operator == (const std::array<T, 3>& a, const std::array<T, 3>& b) {
-  return (a[0] == b[0]) && (a[1] == b[1]) && (a[2] == b[2]);
-}
-
-template <class T>
-bool operator == (const std::array<T, 4>& a, const std::array<T, 4>& b) {
-  return (a[0] == b[0]) && (a[1] == b[1]) && (a[2] == b[2]) && (a[3] == b[3]);
-}
-
-////////////////////////////////
-// operator !=
-////////////////////////////////
-
-template <class T>
-bool operator != (const std::array<T, 2>& a, const std::array<T, 2>& b) {
-  return (a[0] != b[0]) || (a[1] != b[1]);
-}
-
-template <class T>
-bool operator != (const std::array<T, 3>& a, const std::array<T, 3>& b) {
-  return (a[0] != b[0]) || (a[1] != b[1]) || (a[2] != b[2]);
-}
-
-template <class T>
-bool operator != (const std::array<T, 4>& a, const std::array<T, 4>& b) {
-  return (a[0] != b[0]) || (a[1] != b[1]) || (a[2] != b[2]) || (a[3] != b[3]);
-}
-
-////////////////////////////////
-// operator <=
-////////////////////////////////
-
-template <class T>
-bool operator <= (const std::array<T, 2>& a, const std::array<T, 2>& b) {
-  return !(a > b);
-}
-
-template <class T>
-bool operator <= (const std::array<T, 3>& a, const std::array<T, 3>& b) {
-  return !(a > b);
-}
-
-template <class T>
-bool operator <= (const std::array<T, 4>& a, const std::array<T, 4>& b) {
-  return !(a > b);
-}
-
-////////////////////////////////
-// operator >=
-////////////////////////////////
-
-template <class T>
-bool operator >= (const std::array<T, 2>& a, const std::array<T, 2>& b) {
-  return !(a < b);
-}
-
-template <class T>
-bool operator >= (const std::array<T, 3>& a, const std::array<T, 3>& b) {
-  return !(a < b);
-}
-
-template <class T>
-bool operator >= (const std::array<T, 4>& a, const std::array<T, 4>& b) {
-  return !(a < b);
 }
 
 ////////////////////////////////
@@ -935,42 +1020,6 @@ std::array<T, 3> cross(const std::array<T, 3>& a, const std::array<T, 3>& b) {
 template <class T>
 std::array<T, 4> cross(const std::array<T, 4>& a, const std::array<T, 4>& b) {
   return {a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0], static_cast<T>(0)};
-}
-
-////////////////////////////////
-// unary operator +
-////////////////////////////////
-
-template <class T, std::size_t dim>
-std::array<T, dim> operator + (const std::array<T, dim>& a) {
-  return a;
-}
-
-////////////////////////////////
-// unary operator -
-////////////////////////////////
-
-template <class T, std::size_t dim>
-std::array<T, dim> operator - (const std::array<T, dim>& a) {
-  std::array<T, dim> res;
-  for (std::size_t i = 0; i < dim; ++i)
-    res[i] = -a[i];
-  return res;
-}
-
-template <class T>
-std::array<T, 2> operator - (const std::array<T, 2>& a) {
-  return { -a[0], -a[1]};
-}
-
-template <class T>
-std::array<T, 3> operator - (const std::array<T, 3>& a) {
-  return { -a[0], -a[1], -a[2]};
-}
-
-template <class T>
-std::array<T, 4> operator - (const std::array<T, 4>& a) {
-  return { -a[0], -a[1], -a[2], -a[3]};
 }
 
 ////////////////////////////////
@@ -1323,9 +1372,9 @@ template <class T>
 std::array<T, 4> quaternion_multiply(const std::array<T, 4>& q1, const std::array<T, 4>& q2)
 {
   return std::array<T, 4>({{q1[3] * q2[0] + q1[0] * q2[3] + q1[1] * q2[2] - q1[2] * q2[1],
-                          q1[3] * q2[1] - q1[0] * q2[2] + q1[1] * q2[3] + q1[2] * q2[0],
-                          q1[3] * q2[2] + q1[0] * q2[1] - q1[1] * q2[0] + q1[2] * q2[3],
-                          q1[3] * q2[3] - q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2]}});
+    q1[3] * q2[1] - q1[0] * q2[2] + q1[1] * q2[3] + q1[2] * q2[0],
+    q1[3] * q2[2] + q1[0] * q2[1] - q1[1] * q2[0] + q1[2] * q2[3],
+    q1[3] * q2[3] - q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2]}});
 }
 
 template <class T>
@@ -1349,6 +1398,7 @@ std::array<T, 4> quaternion_conjugate(const std::array<T, 4>& quaternion)
 template <class T>
 std::array<T, 4> quaternion_inverse(const std::array<T, 4>& quaternion)
 {
+  using ::operator/;
   T denom = dot(quaternion, quaternion);
   return quaternion_conjugate(quaternion) / denom;
 }
@@ -1356,7 +1406,8 @@ std::array<T, 4> quaternion_inverse(const std::array<T, 4>& quaternion)
 template <class T>
 std::array<T, 4> quaternion_normalize(const std::array<T, 4>& quaternion)
 {
-  T denom = std::sqrt(dot4(quaternion, quaternion));
+  using ::operator/;
+  T denom = sqrt(dot(quaternion, quaternion));
   return quaternion / denom;
 }
 
@@ -1364,7 +1415,7 @@ template <class T>
 array4x4<T> look_at(const std::array<T, 3>& eye, const std::array<T, 3>& center, const std::array<T, 3>& up)
 {
   array4x4<T> m;
-  std::array<T, 3> z = normalize(eye - center);
+  std::array<T, 3> z = normalize(::operator - (eye, center));
   std::array<T, 3> x = normalize(cross(up, z));
   std::array<T, 3> y = cross(z, x);
   std::array<T, 4> X{{x[0], y[0], z[0], static_cast<T>(0)}};
@@ -1399,6 +1450,7 @@ array4x4<T> look_at(const std::array<T, 4>& eye, const std::array<T, 4>& center,
 template <class T>
 void get_eye_center_up(std::array<T, 3>& eye, std::array<T, 3>& center, std::array<T, 3>& up, const array4x4<T>& transform)
 {
+  using ::operator-;
   array4x4<T> tr_inv = invert_orthonormal(transform);
   eye[0] = tr_inv[12];
   eye[1] = tr_inv[13];
@@ -1411,6 +1463,7 @@ void get_eye_center_up(std::array<T, 3>& eye, std::array<T, 3>& center, std::arr
 template <class T>
 void get_eye_center_up(std::array<T, 4>& eye, std::array<T, 4>& center, std::array<T, 4>& up, const array4x4<T>& transform)
 {
+  using ::operator-;
   array4x4<T> tr_inv = invert_orthonormal(transform);
   eye[0] = tr_inv[12];
   eye[1] = tr_inv[13];
@@ -1442,9 +1495,9 @@ std::array<T, 4> roll_pitch_yaw_to_quaternion(T rx, T ry, T rz)
 template <class T>
 std::array<T, 4> rotation_to_quaternion(const array4x4<T>& m)
 {
-  T rz = std::atan2(m.col[0][1], m.col[0][0]);
-  const auto sg = std::sin(rz);
-  const auto cg = std::cos(rz);
+  T rz = atan2(m.col[0][1], m.col[0][0]);
+  const auto sg = sin(rz);
+  const auto cg = cos(rz);
   T ry = atan2(-m.col[0][2], m.col[0][0] * cg + m.col[0][1] * sg);
   T rx = atan2(m.col[2][0] * sg - m.col[2][1] * cg, m.col[1][1] * cg - m.col[1][0] * sg);
   return roll_pitch_yaw_to_quaternion(rx, ry, rz);
@@ -1461,6 +1514,9 @@ array4x4<T> transpose(const array4x4<T>& m)
 template <class T>
 array4x4<T> invert_orthonormal(const array4x4<T>& m)
 {
+  using ::operator-;
+  using ::operator*;
+  using ::operator+;
   array4x4<T> out;
   transpose(out.col[0], out.col[1], out.col[2], out.col[3], m.col[0], m.col[1], m.col[2], std::array<T, 4>{{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
   out.col[3] = -(out.col[0] * m[12] + out.col[1] * m[13] + out.col[2] * m[14]);
@@ -1471,6 +1527,8 @@ array4x4<T> invert_orthonormal(const array4x4<T>& m)
 template <class T>
 std::array<T, 4> matrix_vector_multiply(const array4x4<T>& m, const std::array<T, 4>& v)
 {
+  using ::operator*;
+  using ::operator+;
   std::array<T, 4> out = m.col[0] * v[0] + m.col[1] * v[1] + m.col[2] * v[2] + m.col[3] * v[3];
   return out;
 }
@@ -1478,37 +1536,55 @@ std::array<T, 4> matrix_vector_multiply(const array4x4<T>& m, const std::array<T
 template <class T>
 array4x4<T> operator + (const array4x4<T>& left, const array4x4<T>& right)
 {
+  using ::operator+;
   return array4x4<T>(left.col[0] + right.col[0], left.col[1] + right.col[1], left.col[2] + right.col[2], left.col[3] + right.col[3]);
 }
 
 template <class T>
 array4x4<T> operator - (const array4x4<T>& left, const array4x4<T>& right)
 {
+  using ::operator-;
   return array4x4<T>(left.col[0] - right.col[0], left.col[1] - right.col[1], left.col[2] - right.col[2], left.col[3] - right.col[3]);
+}
+
+template <class T>
+array4x4<T> operator + (const array4x4<T>& a)
+{
+  return a;
+}
+
+template <class T>
+array4x4<T> operator - (const array4x4<T>& a)
+{
+  using ::operator-;
+  return array4x4<T>(-a.col[0], -a.col[1], -a.col[2], -a.col[3]);
 }
 
 template <class T>
 array4x4<T> operator / (const array4x4<T>& left, const T value)
 {
+  using ::operator/;
   return array4x4<T>(left.col[0] / value, left.col[1] / value, left.col[2] / value, left.col[3] / value);
 }
 
 template <class T>
 array4x4<T> operator / (const T value, const array4x4<T>& right)
 {
+  using ::operator/;
   return array4x4<T>(value / right.col[0], value / right.col[1], value / right.col[2], value / right.col[3]);
 }
-
 
 template <class T>
 array4x4<T> operator * (const array4x4<T>& left, const T value)
 {
+  using ::operator*;
   return array4x4<T>(left.col[0] * value, left.col[1] * value, left.col[2] * value, left.col[3] * value);
 }
 
 template <class T>
 array4x4<T> operator * (const T value, const array4x4<T>& right)
 {
+  using ::operator*;
   return array4x4<T>(value * right.col[0], value * right.col[1], value * right.col[2], value * right.col[3]);
 }
 
@@ -1623,3 +1699,4 @@ std::array<T, 4> get_z_axis(const array4x4<T>& matrix)
 {
   return matrix.col[2];
 }
+} // namespace ma
