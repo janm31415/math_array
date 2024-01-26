@@ -44,44 +44,44 @@ namespace
   {
     void test()
     {
-      auto res2 = a2 + b2;
+      auto res2 = this->a2 + this->b2; // Usage of this-> to make it compile with XCode. Don't know why this is necessary. Maybe the compiler has issues with the template usage?
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] + b2[i], res2[i]);
-      auto res3 = a3 + b3;
+        TEST_EQ(this->a2[i] + this->b2[i], res2[i]);
+      auto res3 = this->a3 + this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] + b3[i], res3[i]);
-      auto res4 = a4 + b4;
+        TEST_EQ(this->a3[i] + this->b3[i], res3[i]);
+      auto res4 = this->a4 + this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] + b4[i], res4[i]);
-      auto resn = an + bn;
+        TEST_EQ(this->a4[i] + this->b4[i], res4[i]);
+      auto resn = this->an + this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] + bn[i], resn[i]);
+        TEST_EQ(this->an[i] + this->bn[i], resn[i]);
 
-      res2 = a2 + static_cast<T>(2);
+      res2 = this->a2 + static_cast<T>(2);
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] + 2, res2[i]);
-      res3 = a3 + static_cast<T>(2);
+        TEST_EQ(this->a2[i] + 2, res2[i]);
+      res3 = this->a3 + static_cast<T>(2);
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] + 2, res3[i]);
-      res4 = a4 + static_cast<T>(2);
+        TEST_EQ(this->a3[i] + 2, res3[i]);
+      res4 = this->a4 + static_cast<T>(2);
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] + 2, res4[i]);
-      resn = an + static_cast<T>(2);
+        TEST_EQ(this->a4[i] + 2, res4[i]);
+      resn = this->an + static_cast<T>(2);
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] + 2, resn[i]);
+        TEST_EQ(this->an[i] + 2, resn[i]);
 
-      res2 = static_cast<T>(2) + b2;
+      res2 = static_cast<T>(2) + this->b2;
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(2 + b2[i], res2[i]);
-      res3 = static_cast<T>(2) + b3;
+        TEST_EQ(2 + this->b2[i], res2[i]);
+      res3 = static_cast<T>(2) + this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(2 + b3[i], res3[i]);
-      res4 = static_cast<T>(2) + b4;
+        TEST_EQ(2 + this->b3[i], res3[i]);
+      res4 = static_cast<T>(2) + this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(2 + b4[i], res4[i]);
-      resn = static_cast<T>(2) + bn;
+        TEST_EQ(2 + this->b4[i], res4[i]);
+      resn = static_cast<T>(2) + this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(2 + bn[i], resn[i]);
+        TEST_EQ(2 + this->bn[i], resn[i]);
     }
   };
 
@@ -90,44 +90,44 @@ namespace
   {
     void test()
     {
-      auto res2 = a2 - b2;
+      auto res2 = this->a2 - this->b2;
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] - b2[i], res2[i]);
-      auto res3 = a3 - b3;
+        TEST_EQ(this->a2[i] - this->b2[i], res2[i]);
+      auto res3 = this->a3 - this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] - b3[i], res3[i]);
-      auto res4 = a4 - b4;
+        TEST_EQ(this->a3[i] - this->b3[i], res3[i]);
+      auto res4 = this->a4 - this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] - b4[i], res4[i]);
-      auto resn = an - bn;
+        TEST_EQ(this->a4[i] - this->b4[i], res4[i]);
+      auto resn = this->an - this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] - bn[i], resn[i]);
+        TEST_EQ(this->an[i] - this->bn[i], resn[i]);
 
-      res2 = a2 - static_cast<T>(2);
+      res2 = this->a2 - static_cast<T>(2);
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] - 2, res2[i]);
-      res3 = a3 - static_cast<T>(2);
+        TEST_EQ(this->a2[i] - 2, res2[i]);
+      res3 = this->a3 - static_cast<T>(2);
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] - 2, res3[i]);
-      res4 = a4 - static_cast<T>(2);
+        TEST_EQ(this->a3[i] - 2, res3[i]);
+      res4 = this->a4 - static_cast<T>(2);
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] - 2, res4[i]);
-      resn = an - static_cast<T>(2);
+        TEST_EQ(this->a4[i] - 2, res4[i]);
+      resn = this->an - static_cast<T>(2);
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] - 2, resn[i]);
+        TEST_EQ(this->an[i] - 2, resn[i]);
 
-      res2 = static_cast<T>(2) - b2;
+      res2 = static_cast<T>(2) - this->b2;
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(2 - b2[i], res2[i]);
-      res3 = static_cast<T>(2) - b3;
+        TEST_EQ(2 - this->b2[i], res2[i]);
+      res3 = static_cast<T>(2) - this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(2 - b3[i], res3[i]);
-      res4 = static_cast<T>(2) - b4;
+        TEST_EQ(2 - this->b3[i], res3[i]);
+      res4 = static_cast<T>(2) - this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(2 - b4[i], res4[i]);
-      resn = static_cast<T>(2) - bn;
+        TEST_EQ(2 - this->b4[i], res4[i]);
+      resn = static_cast<T>(2) - this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(2 - bn[i], resn[i]);
+        TEST_EQ(2 - this->bn[i], resn[i]);
     }
   };
 
@@ -136,44 +136,44 @@ namespace
   {
     void test()
     {
-      auto res2 = a2 * b2;
+      auto res2 = this->a2 * this->b2;
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] * b2[i], res2[i]);
-      auto res3 = a3 * b3;
+        TEST_EQ(this->a2[i] * this->b2[i], res2[i]);
+      auto res3 = this->a3 * this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] * b3[i], res3[i]);
-      auto res4 = a4 * b4;
+        TEST_EQ(this->a3[i] * this->b3[i], res3[i]);
+      auto res4 = this->a4 * this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] * b4[i], res4[i]);
-      auto resn = an * bn;
+        TEST_EQ(this->a4[i] * this->b4[i], res4[i]);
+      auto resn = this->an * this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] * bn[i], resn[i]);
+        TEST_EQ(this->an[i] * this->bn[i], resn[i]);
 
-      res2 = a2 * static_cast<T>(2);
+      res2 = this->a2 * static_cast<T>(2);
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] * 2, res2[i]);
-      res3 = a3 * static_cast<T>(2);
+        TEST_EQ(this->a2[i] * 2, res2[i]);
+      res3 = this->a3 * static_cast<T>(2);
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] * 2, res3[i]);
-      res4 = a4 * static_cast<T>(2);
+        TEST_EQ(this->a3[i] * 2, res3[i]);
+      res4 = this->a4 * static_cast<T>(2);
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] * 2, res4[i]);
-      resn = an * static_cast<T>(2);
+        TEST_EQ(this->a4[i] * 2, res4[i]);
+      resn = this->an * static_cast<T>(2);
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] * 2, resn[i]);
+        TEST_EQ(this->an[i] * 2, resn[i]);
 
-      res2 = static_cast<T>(2) * b2;
+      res2 = static_cast<T>(2) * this->b2;
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(2 * b2[i], res2[i]);
-      res3 = static_cast<T>(2) * b3;
+        TEST_EQ(2 * this->b2[i], res2[i]);
+      res3 = static_cast<T>(2) * this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(2 * b3[i], res3[i]);
-      res4 = static_cast<T>(2) * b4;
+        TEST_EQ(2 * this->b3[i], res3[i]);
+      res4 = static_cast<T>(2) * this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(2 * b4[i], res4[i]);
-      resn = static_cast<T>(2) * bn;
+        TEST_EQ(2 * this->b4[i], res4[i]);
+      resn = static_cast<T>(2) * this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(2 * bn[i], resn[i]);
+        TEST_EQ(2 * this->bn[i], resn[i]);
     }
   };
 
@@ -182,44 +182,44 @@ namespace
   {
     void test()
     {
-      auto res2 = a2 / b2;
+      auto res2 = this->a2 / this->b2;
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] / b2[i], res2[i]);
-      auto res3 = a3 / b3;
+        TEST_EQ(this->a2[i] / this->b2[i], res2[i]);
+      auto res3 = this->a3 / this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] / b3[i], res3[i]);
-      auto res4 = a4 / b4;
+        TEST_EQ(this->a3[i] / this->b3[i], res3[i]);
+      auto res4 = this->a4 / this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] / b4[i], res4[i]);
-      auto resn = an / bn;
+        TEST_EQ(this->a4[i] / this->b4[i], res4[i]);
+      auto resn = this->an / this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] / bn[i], resn[i]);
+        TEST_EQ(this->an[i] / this->bn[i], resn[i]);
 
-      res2 = a2 / static_cast<T>(2);
+      res2 = this->a2 / static_cast<T>(2);
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(a2[i] / 2, res2[i]);
-      res3 = a3 / static_cast<T>(2);
+        TEST_EQ(this->a2[i] / 2, res2[i]);
+      res3 = this->a3 / static_cast<T>(2);
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(a3[i] / 2, res3[i]);
-      res4 = a4 / static_cast<T>(2);
+        TEST_EQ(this->a3[i] / 2, res3[i]);
+      res4 = this->a4 / static_cast<T>(2);
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(a4[i] / 2, res4[i]);
-      resn = an / static_cast<T>(2);
+        TEST_EQ(this->a4[i] / 2, res4[i]);
+      resn = this->an / static_cast<T>(2);
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(an[i] / 2, resn[i]);
+        TEST_EQ(this->an[i] / 2, resn[i]);
 
-      res2 = static_cast<T>(2) / b2;
+      res2 = static_cast<T>(2) / this->b2;
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(2 / b2[i], res2[i]);
-      res3 = static_cast<T>(2) / b3;
+        TEST_EQ(2 / this->b2[i], res2[i]);
+      res3 = static_cast<T>(2) / this->b3;
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(2 / b3[i], res3[i]);
-      res4 = static_cast<T>(2) / b4;
+        TEST_EQ(2 / this->b3[i], res3[i]);
+      res4 = static_cast<T>(2) / this->b4;
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(2 / b4[i], res4[i]);
-      resn = static_cast<T>(2) / bn;
+        TEST_EQ(2 / this->b4[i], res4[i]);
+      resn = static_cast<T>(2) / this->bn;
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(2 / bn[i], resn[i]);
+        TEST_EQ(2 / this->bn[i], resn[i]);
     }
   };
 
@@ -229,18 +229,18 @@ namespace
   {
     void test()
     {
-      auto res2 = min(a2,b2);
+      auto res2 = min(this->a2,this->b2);
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(std::min<T>(a2[i], b2[i]), res2[i]);
-      auto res3 = min(a3, b3);
+        TEST_EQ(std::min<T>(this->a2[i], this->b2[i]), res2[i]);
+      auto res3 = min(this->a3, this->b3);
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(std::min<T>(a3[i], b3[i]), res3[i]);
-      auto res4 = min(a4, b4);
+        TEST_EQ(std::min<T>(this->a3[i], this->b3[i]), res3[i]);
+      auto res4 = min(this->a4, this->b4);
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(std::min<T>(a4[i], b4[i]), res4[i]);
-      auto resn = min(an, bn);
+        TEST_EQ(std::min<T>(this->a4[i], this->b4[i]), res4[i]);
+      auto resn = min(this->an, this->bn);
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(std::min<T>(an[i], bn[i]), resn[i]);
+        TEST_EQ(std::min<T>(this->an[i], this->bn[i]), resn[i]);
     }
   };
 
@@ -249,20 +249,21 @@ namespace
   {
     void test()
     {
-      auto res2 = max(a2, b2);
+      auto res2 = max(this->a2, this->b2);
       for (int i = 0; i < 2; ++i)
-        TEST_EQ(std::max<T>(a2[i], b2[i]), res2[i]);
-      auto res3 = max(a3, b3);
+        TEST_EQ(std::max<T>(this->a2[i], this->b2[i]), res2[i]);
+      auto res3 = max(this->a3, this->b3);
       for (int i = 0; i < 3; ++i)
-        TEST_EQ(std::max<T>(a3[i], b3[i]), res3[i]);
-      auto res4 = max(a4, b4);
+        TEST_EQ(std::max<T>(this->a3[i], this->b3[i]), res3[i]);
+      auto res4 = max(this->a4, this->b4);
       for (int i = 0; i < 4; ++i)
-        TEST_EQ(std::max<T>(a4[i], b4[i]), res4[i]);
-      auto resn = max(an, bn);
+        TEST_EQ(std::max<T>(this->a4[i], this->b4[i]), res4[i]);
+      auto resn = max(this->an, this->bn);
       for (int i = 0; i < NDIM; ++i)
-        TEST_EQ(std::max<T>(an[i], bn[i]), resn[i]);
+        TEST_EQ(std::max<T>(this->an[i], this->bn[i]), resn[i]);
     }
   };
+  
   template <class T>
   void run_typed_math_array_tests()
   {
