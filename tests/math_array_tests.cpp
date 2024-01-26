@@ -93,6 +93,28 @@ struct math_array_fixture
 };
 
 template <class T>
+struct math_array4x4_fixture
+{
+  math_array4x4_fixture()
+  {
+    for (int i = 0; i < 16; ++i)
+      {
+      a[i] = i+1;
+      b[i] = a[i]*2;
+      c[i] = i+1;
+      }
+    c[14] = -1;
+    c[7] = -3;
+    v = {{1,2,3,1}};
+    w = {{4,5,6,0}};
+  }
+  
+  array4x4<T> a, b, c;
+  std::array<T, 4> v, w;
+};
+
+
+template <class T>
 struct add_vectors : public math_array_fixture<T>
 {
   void test()
@@ -594,6 +616,87 @@ void test_transpose()
   }
 
 template <class T>
+struct array4x4_tests : public math_array4x4_fixture<T>
+{
+  void test()
+  {
+  for (int i = 0; i < 16; ++i)
+    TEST_EQ(static_cast<T>(i+1), this->a[i]);
+  array4x4<T> id = get_identity<T>();
+  array4x4<T> res = matrix_matrix_multiply(id, this->a);
+  for (int i = 0; i < 16; ++i)
+    TEST_EQ(static_cast<T>(i+1), res[i]);
+  res = matrix_matrix_multiply(this->a, id);
+  for (int i = 0; i < 16; ++i)
+    TEST_EQ(static_cast<T>(i+1), res[i]);
+  res = matrix_matrix_multiply(id, this->b);
+  for (int i = 0; i < 16; ++i)
+    TEST_EQ(this->b[i], res[i]);
+  res = matrix_matrix_multiply(this->b, id);
+  for (int i = 0; i < 16; ++i)
+    TEST_EQ(this->b[i], res[i]);
+  res = matrix_matrix_multiply(this->a, this->b);
+  TEST_EQ(180, res[0]);
+  TEST_EQ(200, res[1]);
+  TEST_EQ(220, res[2]);
+  TEST_EQ(240, res[3]);
+  TEST_EQ(404, res[4]);
+  TEST_EQ(456, res[5]);
+  TEST_EQ(508, res[6]);
+  TEST_EQ(560, res[7]);
+  TEST_EQ(628, res[8]);
+  TEST_EQ(712, res[9]);
+  TEST_EQ(796, res[10]);
+  TEST_EQ(880, res[11]);
+  TEST_EQ(852, res[12]);
+  TEST_EQ(968, res[13]);
+  TEST_EQ(1084, res[14]);
+  TEST_EQ(1200, res[15]);
+  res = make_translation<T>(1, 2, 3);
+  for (int i = 0; i < 12; ++i)
+    TEST_EQ(id[i], res[i]);
+  TEST_EQ(static_cast<T>(1), res[12]);
+  TEST_EQ(static_cast<T>(2), res[13]);
+  TEST_EQ(static_cast<T>(3), res[14]);
+  TEST_EQ(static_cast<T>(1), res[15]);
+  }
+};
+
+template <class T>
+struct array4x4_invert_tests : public math_array4x4_fixture<T>
+{
+  void test()
+  {
+  }
+};
+
+template <>
+struct array4x4_invert_tests<double> : public math_array4x4_fixture<double>
+{
+  void test()
+  {
+  auto id = get_identity<double>();
+  auto res = invert(this->c);
+  auto res2 = matrix_matrix_multiply(res, this->c);
+  for (int i = 0; i < 16; ++i)
+    TEST_EQ_CLOSE(id[i], res2[i], 1e-12);
+  }
+};
+
+template <>
+struct array4x4_invert_tests<float> : public math_array4x4_fixture<float>
+{
+  void test()
+  {
+  auto id = get_identity<float>();
+  auto res = invert(this->c);
+  auto res2 = matrix_matrix_multiply(res, this->c);
+  for (int i = 0; i < 16; ++i)
+    TEST_EQ_CLOSE(id[i], res2[i], 1e-6f);
+  }
+};
+
+template <class T>
 void run_typed_math_array_tests()
 {
   add_vectors<T>().test();
@@ -615,6 +718,8 @@ void run_typed_math_array_tests()
   min_horizontal_vectors<T>().test();
   max_horizontal_vectors<T>().test();
   test_transpose<T>();
+  array4x4_tests<T>().test();
+  array4x4_invert_tests<T>().test();
 }
 } // anonymous namespace
 

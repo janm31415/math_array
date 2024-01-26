@@ -799,3 +799,224 @@ void transpose(std::array<T, 4>& r0, std::array<T, 4>& r1, std::array<T, 4>& r2,
   r2 = unpacklo(h02, h13);
   r3 = unpackhi(h02, h13);
 }
+
+////////////////////////////////
+// array4x4
+////////////////////////////////
+
+template <class T>
+struct array4x4
+{
+  union
+  {
+    std::array<T, 4> col[4];
+    std::array<T, 16> f;
+  };
+  
+  template <typename T1>
+  T& operator [] (T1 i)
+  {
+    return f[i];
+  }
+  
+  template <typename T1>
+  T operator [] (T1 i) const
+  {
+    return f[i];
+  }
+  
+  array4x4() {}
+  array4x4(const std::array<T, 4>& col0, const std::array<T, 4>& col1, const std::array<T, 4>& col2, const std::array<T, 4>& col3) : col { col0, col1, col2, col3 } {}
+  array4x4(const std::array<T, 16>& m) : f(m) {}
+  array4x4(const T* m)
+  {
+    for (int i = 0; i < 16; ++i)
+      f[i] = m[i];
+  }
+};
+
+template <class T>
+array4x4<T> get_identity()
+{
+  array4x4<T> m({{static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(1), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
+  return m;
+}
+
+template <class T>
+array4x4<T> make_translation(const T x, const T y, const T z)
+{
+  array4x4<T> m({{static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(1), static_cast<T>(0)}}, {{static_cast<T>(x), static_cast<T>(y), static_cast<T>(z), static_cast<T>(1)}});
+  return m;
+}
+
+template <class T>
+array4x4<T> invert(const array4x4<T>& m)
+{
+  array4x4<T> out;
+  T det;
+  int i;
+  
+  out[0] = m[5] * m[10] * m[15] -
+  m[5] * m[11] * m[14] -
+  m[9] * m[6] * m[15] +
+  m[9] * m[7] * m[14] +
+  m[13] * m[6] * m[11] -
+  m[13] * m[7] * m[10];
+  
+  out[4] = -m[4] * m[10] * m[15] +
+  m[4] * m[11] * m[14] +
+  m[8] * m[6] * m[15] -
+  m[8] * m[7] * m[14] -
+  m[12] * m[6] * m[11] +
+  m[12] * m[7] * m[10];
+  
+  out[8] = m[4] * m[9] * m[15] -
+  m[4] * m[11] * m[13] -
+  m[8] * m[5] * m[15] +
+  m[8] * m[7] * m[13] +
+  m[12] * m[5] * m[11] -
+  m[12] * m[7] * m[9];
+  
+  out[12] = -m[4] * m[9] * m[14] +
+  m[4] * m[10] * m[13] +
+  m[8] * m[5] * m[14] -
+  m[8] * m[6] * m[13] -
+  m[12] * m[5] * m[10] +
+  m[12] * m[6] * m[9];
+  
+  out[1] = -m[1] * m[10] * m[15] +
+  m[1] * m[11] * m[14] +
+  m[9] * m[2] * m[15] -
+  m[9] * m[3] * m[14] -
+  m[13] * m[2] * m[11] +
+  m[13] * m[3] * m[10];
+  
+  out[5] = m[0] * m[10] * m[15] -
+  m[0] * m[11] * m[14] -
+  m[8] * m[2] * m[15] +
+  m[8] * m[3] * m[14] +
+  m[12] * m[2] * m[11] -
+  m[12] * m[3] * m[10];
+  
+  out[9] = -m[0] * m[9] * m[15] +
+  m[0] * m[11] * m[13] +
+  m[8] * m[1] * m[15] -
+  m[8] * m[3] * m[13] -
+  m[12] * m[1] * m[11] +
+  m[12] * m[3] * m[9];
+  
+  out[13] = m[0] * m[9] * m[14] -
+  m[0] * m[10] * m[13] -
+  m[8] * m[1] * m[14] +
+  m[8] * m[2] * m[13] +
+  m[12] * m[1] * m[10] -
+  m[12] * m[2] * m[9];
+  
+  out[2] = m[1] * m[6] * m[15] -
+  m[1] * m[7] * m[14] -
+  m[5] * m[2] * m[15] +
+  m[5] * m[3] * m[14] +
+  m[13] * m[2] * m[7] -
+  m[13] * m[3] * m[6];
+  
+  out[6] = -m[0] * m[6] * m[15] +
+  m[0] * m[7] * m[14] +
+  m[4] * m[2] * m[15] -
+  m[4] * m[3] * m[14] -
+  m[12] * m[2] * m[7] +
+  m[12] * m[3] * m[6];
+  
+  out[10] = m[0] * m[5] * m[15] -
+  m[0] * m[7] * m[13] -
+  m[4] * m[1] * m[15] +
+  m[4] * m[3] * m[13] +
+  m[12] * m[1] * m[7] -
+  m[12] * m[3] * m[5];
+  
+  out[14] = -m[0] * m[5] * m[14] +
+  m[0] * m[6] * m[13] +
+  m[4] * m[1] * m[14] -
+  m[4] * m[2] * m[13] -
+  m[12] * m[1] * m[6] +
+  m[12] * m[2] * m[5];
+  
+  out[3] = -m[1] * m[6] * m[11] +
+  m[1] * m[7] * m[10] +
+  m[5] * m[2] * m[11] -
+  m[5] * m[3] * m[10] -
+  m[9] * m[2] * m[7] +
+  m[9] * m[3] * m[6];
+  
+  out[7] = m[0] * m[6] * m[11] -
+  m[0] * m[7] * m[10] -
+  m[4] * m[2] * m[11] +
+  m[4] * m[3] * m[10] +
+  m[8] * m[2] * m[7] -
+  m[8] * m[3] * m[6];
+  
+  out[11] = -m[0] * m[5] * m[11] +
+  m[0] * m[7] * m[9] +
+  m[4] * m[1] * m[11] -
+  m[4] * m[3] * m[9] -
+  m[8] * m[1] * m[7] +
+  m[8] * m[3] * m[5];
+  
+  out[15] = m[0] * m[5] * m[10] -
+  m[0] * m[6] * m[9] -
+  m[4] * m[1] * m[10] +
+  m[4] * m[2] * m[9] +
+  m[8] * m[1] * m[6] -
+  m[8] * m[2] * m[5];
+  
+  det = m[0] * out[0] + m[1] * out[4] + m[2] * out[8] + m[3] * out[12];
+  
+  for (i = 0; i < 16; ++i)
+    out[i] = out[i] / det;
+  return out;
+}
+
+template <class T>
+array4x4<T> matrix_matrix_multiply(const array4x4<T>& left, const array4x4<T>& right)
+{
+  array4x4<T> out;
+  std::array<T, 4> r[4];
+  transpose(r[0], r[1], r[2], r[3], left.col[0], left.col[1], left.col[2], left.col[3]);
+  
+  out[0] = dot(r[0], right.col[0]);
+  out[1] = dot(r[1], right.col[0]);
+  out[2] = dot(r[2], right.col[0]);
+  out[3] = dot(r[3], right.col[0]);
+  out[4] = dot(r[0], right.col[1]);
+  out[5] = dot(r[1], right.col[1]);
+  out[6] = dot(r[2], right.col[1]);
+  out[7] = dot(r[3], right.col[1]);
+  out[8] = dot(r[0], right.col[2]);
+  out[9] = dot(r[1], right.col[2]);
+  out[10] = dot(r[2], right.col[2]);
+  out[11] = dot(r[3], right.col[2]);
+  out[12] = dot(r[0], right.col[3]);
+  out[13] = dot(r[1], right.col[3]);
+  out[14] = dot(r[2], right.col[3]);
+  out[15] = dot(r[3], right.col[3]);
+  return out;
+}
+
+template <class T>
+array4x4<T> frustum(T left, T right, T bottom, T top, T near_plane, T far_plane)
+{
+  array4x4<T> out(std::array<T, 4>(static_cast<T>(2) * near_plane / (right - left), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)),
+                  std::array<T, 4>(static_cast<T>(0), static_cast<T>(-2) * near_plane / (top - bottom), static_cast<T>(0), static_cast<T>(0)),
+                  std::array<T, 4>((right + left) / (right - left), -(top + bottom) / (top - bottom), -(far_plane + near_plane) / (far_plane - near_plane), -1.f),
+                  std::array<T, 4>(static_cast<T>(0), static_cast<T>(0), -(static_cast<T>(2) * far_plane * near_plane) / (far_plane - near_plane), static_cast<T>(0)));
+  return out;
+}
+
+template <class T>
+array4x4<T> orthographic(T left, T right, T bottom, T top, T near_plane, T far_plane)
+{
+  array4x4<T> out(std::array<T, 4>(static_cast<T>(2) / (right - left), static_cast<T>(0), static_cast<T>(0), -(right + left) / (right - left)),
+                  std::array<T, 4>(static_cast<T>(0), static_cast<T>(2) / (top - bottom), static_cast<T>(0), -(top + bottom) / (top - bottom)),
+                  std::array<T, 4>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(-2) / (far_plane - near_plane), -(far_plane + near_plane) / (far_plane - near_plane)),
+                  std::array<T, 4>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)));
+  return out;
+}
