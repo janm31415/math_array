@@ -3,6 +3,9 @@
 
 #include "../math_array.h"
 
+#include <random>
+#include <vector>
+
 #define NDIM 10
 
 namespace custom_stuff
@@ -98,11 +101,11 @@ struct math_array4x4_fixture
   math_array4x4_fixture()
   {
     for (int i = 0; i < 16; ++i)
-      {
+    {
       a[i] = i+1;
       b[i] = a[i]*2;
       c[i] = i+1;
-      }
+    }
     c[14] = -1;
     c[7] = -3;
     v = {{1,2,3,1}};
@@ -569,10 +572,10 @@ struct min_horizontal_vectors : public math_array_fixture<T>
 {
   void test()
   {
-  TEST_EQ(-1, min_horizontal(this->a2));
-  TEST_EQ(-1, min_horizontal(this->a3));
-  TEST_EQ(-1, min_horizontal(this->a4));
-  TEST_EQ(-1, min_horizontal(this->an));
+    TEST_EQ(-1, min_horizontal(this->a2));
+    TEST_EQ(-1, min_horizontal(this->a3));
+    TEST_EQ(-1, min_horizontal(this->a4));
+    TEST_EQ(-1, min_horizontal(this->an));
   }
 };
 
@@ -581,16 +584,16 @@ struct max_horizontal_vectors : public math_array_fixture<T>
 {
   void test()
   {
-  TEST_EQ(4, max_horizontal(this->a2));
-  TEST_EQ(6, max_horizontal(this->a3));
-  TEST_EQ(8, max_horizontal(this->a4));
-  TEST_EQ(2*NDIM, max_horizontal(this->an));
+    TEST_EQ(4, max_horizontal(this->a2));
+    TEST_EQ(6, max_horizontal(this->a3));
+    TEST_EQ(8, max_horizontal(this->a4));
+    TEST_EQ(2*NDIM, max_horizontal(this->an));
   }
 };
 
 template <class T>
 void test_transpose()
-  {
+{
   std::array<T, 4> c0 = {1, 2, 3, 4};
   std::array<T, 4> c1 = {5, 6, 7, 8};
   std::array<T, 4> c2 = {9, 10, 11, 12};
@@ -613,52 +616,54 @@ void test_transpose()
   TEST_EQ(8, r3[1]);
   TEST_EQ(12, r3[2]);
   TEST_EQ(16, r3[3]);
-  }
+}
 
 template <class T>
 struct array4x4_tests : public math_array4x4_fixture<T>
 {
   void test()
   {
-  for (int i = 0; i < 16; ++i)
-    TEST_EQ(static_cast<T>(i+1), this->a[i]);
-  array4x4<T> id = get_identity<T>();
-  array4x4<T> res = matrix_matrix_multiply(id, this->a);
-  for (int i = 0; i < 16; ++i)
-    TEST_EQ(static_cast<T>(i+1), res[i]);
-  res = matrix_matrix_multiply(this->a, id);
-  for (int i = 0; i < 16; ++i)
-    TEST_EQ(static_cast<T>(i+1), res[i]);
-  res = matrix_matrix_multiply(id, this->b);
-  for (int i = 0; i < 16; ++i)
-    TEST_EQ(this->b[i], res[i]);
-  res = matrix_matrix_multiply(this->b, id);
-  for (int i = 0; i < 16; ++i)
-    TEST_EQ(this->b[i], res[i]);
-  res = matrix_matrix_multiply(this->a, this->b);
-  TEST_EQ(180, res[0]);
-  TEST_EQ(200, res[1]);
-  TEST_EQ(220, res[2]);
-  TEST_EQ(240, res[3]);
-  TEST_EQ(404, res[4]);
-  TEST_EQ(456, res[5]);
-  TEST_EQ(508, res[6]);
-  TEST_EQ(560, res[7]);
-  TEST_EQ(628, res[8]);
-  TEST_EQ(712, res[9]);
-  TEST_EQ(796, res[10]);
-  TEST_EQ(880, res[11]);
-  TEST_EQ(852, res[12]);
-  TEST_EQ(968, res[13]);
-  TEST_EQ(1084, res[14]);
-  TEST_EQ(1200, res[15]);
-  res = make_translation<T>(1, 2, 3);
-  for (int i = 0; i < 12; ++i)
-    TEST_EQ(id[i], res[i]);
-  TEST_EQ(static_cast<T>(1), res[12]);
-  TEST_EQ(static_cast<T>(2), res[13]);
-  TEST_EQ(static_cast<T>(3), res[14]);
-  TEST_EQ(static_cast<T>(1), res[15]);
+    for (int i = 0; i < 16; ++i)
+      TEST_EQ(static_cast<T>(i+1), this->a[i]);
+    array4x4<T> id = get_identity<T>();
+    array4x4<T> res = matrix_matrix_multiply(id, this->a);
+    for (int i = 0; i < 16; ++i)
+      TEST_EQ(static_cast<T>(i+1), res[i]);
+    res = matrix_matrix_multiply(this->a, id);
+    for (int i = 0; i < 16; ++i)
+      TEST_EQ(static_cast<T>(i+1), res[i]);
+    res = matrix_matrix_multiply(id, this->b);
+    for (int i = 0; i < 16; ++i)
+      TEST_EQ(this->b[i], res[i]);
+    res = matrix_matrix_multiply(this->b, id);
+    for (int i = 0; i < 16; ++i)
+      TEST_EQ(this->b[i], res[i]);
+    res = matrix_matrix_multiply(this->a, this->b);
+    TEST_EQ(180, res[0]);
+    TEST_EQ(200, res[1]);
+    TEST_EQ(220, res[2]);
+    TEST_EQ(240, res[3]);
+    TEST_EQ(404, res[4]);
+    TEST_EQ(456, res[5]);
+    TEST_EQ(508, res[6]);
+    TEST_EQ(560, res[7]);
+    TEST_EQ(628, res[8]);
+    TEST_EQ(712, res[9]);
+    TEST_EQ(796, res[10]);
+    TEST_EQ(880, res[11]);
+    TEST_EQ(852, res[12]);
+    TEST_EQ(968, res[13]);
+    TEST_EQ(1084, res[14]);
+    TEST_EQ(1200, res[15]);
+    res = make_translation<T>(1, 2, 3);
+    for (int i = 0; i < 12; ++i)
+      TEST_EQ(id[i], res[i]);
+    TEST_EQ(static_cast<T>(1), res[12]);
+    TEST_EQ(static_cast<T>(2), res[13]);
+    TEST_EQ(static_cast<T>(3), res[14]);
+    TEST_EQ(static_cast<T>(1), res[15]);
+    res = invert(this->c);
+    res = matrix_matrix_multiply(res, this->c);
   }
 };
 
@@ -675,11 +680,11 @@ struct array4x4_invert_tests<double> : public math_array4x4_fixture<double>
 {
   void test()
   {
-  auto id = get_identity<double>();
-  auto res = invert(this->c);
-  auto res2 = matrix_matrix_multiply(res, this->c);
-  for (int i = 0; i < 16; ++i)
-    TEST_EQ_CLOSE(id[i], res2[i], 1e-12);
+    auto id = get_identity<double>();
+    auto res = invert(this->c);
+    auto res2 = matrix_matrix_multiply(res, this->c);
+    for (int i = 0; i < 16; ++i)
+      TEST_EQ_CLOSE(id[i], res2[i], 1e-12);
   }
 };
 
@@ -688,11 +693,11 @@ struct array4x4_invert_tests<float> : public math_array4x4_fixture<float>
 {
   void test()
   {
-  auto id = get_identity<float>();
-  auto res = invert(this->c);
-  auto res2 = matrix_matrix_multiply(res, this->c);
-  for (int i = 0; i < 16; ++i)
-    TEST_EQ_CLOSE(id[i], res2[i], 1e-6f);
+    auto id = get_identity<float>();
+    auto res = invert(this->c);
+    auto res2 = matrix_matrix_multiply(res, this->c);
+    for (int i = 0; i < 16; ++i)
+      TEST_EQ_CLOSE(id[i], res2[i], 1e-6f);
   }
 };
 
@@ -721,6 +726,437 @@ void run_typed_math_array_tests()
   array4x4_tests<T>().test();
   array4x4_invert_tests<T>().test();
 }
+
+void run_all_lookat_tests()
+{
+  std::mt19937 gen(0);
+  std::uniform_real_distribution<> dis(0.0, 1.0);
+  for (int i = 0; i < 10; ++i)
+  {
+    std::array<float, 3> eye{{static_cast<float>(dis(gen)), static_cast<float>(dis(gen)), static_cast<float>(dis(gen))}};
+    std::array<float, 3> center{{static_cast<float>(dis(gen)), static_cast<float>(dis(gen)), static_cast<float>(dis(gen))}};
+    eye = eye * 50.f;
+    center = center * 50.f;
+    std::array<float, 3> x{{static_cast<float>(dis(gen)), static_cast<float>(dis(gen)), static_cast<float>(dis(gen))}};
+    std::array<float, 3> up = normalize(cross(center-eye, x));
+    auto tr = look_at(eye, center, up);
+    std::array<float, 3> eye2, center2, up2;
+    get_eye_center_up(eye2, center2, up2, tr);
+    float tol = 1e-5f;
+    TEST_EQ_CLOSE(eye[0], eye2[0], tol);
+    TEST_EQ_CLOSE(eye[1], eye2[1], tol);
+    TEST_EQ_CLOSE(eye[2], eye2[2], tol);
+    TEST_EQ_CLOSE(up[0], up2[0], tol);
+    TEST_EQ_CLOSE(up[1], up2[1], tol);
+    TEST_EQ_CLOSE(up[2], up2[2], tol);
+    auto center_dir = normalize(center - eye);
+    auto expected_center = eye + center_dir;
+    TEST_EQ_CLOSE(expected_center[0], center2[0], tol);
+    TEST_EQ_CLOSE(expected_center[1], center2[1], tol);
+    TEST_EQ_CLOSE(expected_center[2], center2[2], tol);
+  }
+}
+
+void run_all_quaternion_tests()
+{
+  std::vector<float> rx, ry, rz;
+  rx = {{0.0, 0.1, 0.2, 0.3, 0.4, -0.1, -0.2, -0.3, -0.4, 0.5, 0.6, 0.7, 0.8, 0.9, -0.5, -0.6, -0.7, -0.8, -0.9, 1.0}};
+  ry = { {0.0, 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, -0.1, -0.1, -0.2, -0.2, -0.3, -0.3, -0.4, -0.4, 0.7, 0.8, 0.9, 1.0} };
+  rz = { {1.0, 0.9, 0.8, 0.7, -1.0, -0.9, -0.8, -0.7, 0.6, 0.5, 0.4, 0.3, -0.6, -0.5, -0.4, -0.3, 0.1, 0.0, -0.1, -0.9} };
+  for (size_t i = 0; i < rx.size(); ++i)
+  {
+    float x = rx[i];
+    float y = ry[i];
+    float z = rz[i];
+    array4x4<float> rot = compute_from_roll_pitch_yaw_transformation(x, y, z, 0.f, 0.f, 0.f);
+    float tx,ty,tz;
+    solve_roll_pitch_yaw_transformation(x, y, z, tx, ty, tz, rot);
+    TEST_EQ_CLOSE(x, rx[i], 1e-5f);
+    TEST_EQ_CLOSE(y, ry[i], 1e-5f);
+    TEST_EQ_CLOSE(z, rz[i], 1e-5f);
+    auto q = rotation_to_quaternion(rot);
+    auto q2 = roll_pitch_yaw_to_quaternion(x, y, z);
+    
+    auto q_inv = quaternion_inverse(q);
+    auto q_qinv = quaternion_multiply(q, q_inv);
+    TEST_EQ_CLOSE(0, q_qinv[0], 1e-5f);
+    TEST_EQ_CLOSE(0, q_qinv[1], 1e-5f);
+    TEST_EQ_CLOSE(0, q_qinv[2], 1e-5f);
+    TEST_EQ_CLOSE(1, q_qinv[3], 1e-5f);
+    
+    for (int j = 0; j < 4; ++j)
+      TEST_EQ_CLOSE(q[j], q2[j], 1e-5f);
+    auto rot2 = quaternion_to_rotation(q);
+    for (int j = 0; j < 16; ++j)
+      TEST_EQ_CLOSE(rot[j], rot2[j], 1e-5f);
+    
+    float angle = quaternion_angle(q);
+    auto axis = quaternion_axis(q);
+    auto rot3 = make_rotation({{0.f,0.f,0.f,1.f}}, axis, angle);
+    auto q3 = rotation_to_quaternion(rot3);
+    for (int j = 0; j < 4; ++j)
+      TEST_EQ_CLOSE(q[j], q3[j], 1e-5f);
+  }
+}
+
+namespace
+{
+
+inline void invert(float* out, const float* m)
+{
+  float inv[16], det;
+  int i;
+  
+  inv[0] = m[5] * m[10] * m[15] -
+  m[5] * m[11] * m[14] -
+  m[9] * m[6] * m[15] +
+  m[9] * m[7] * m[14] +
+  m[13] * m[6] * m[11] -
+  m[13] * m[7] * m[10];
+  
+  inv[4] = -m[4] * m[10] * m[15] +
+  m[4] * m[11] * m[14] +
+  m[8] * m[6] * m[15] -
+  m[8] * m[7] * m[14] -
+  m[12] * m[6] * m[11] +
+  m[12] * m[7] * m[10];
+  
+  inv[8] = m[4] * m[9] * m[15] -
+  m[4] * m[11] * m[13] -
+  m[8] * m[5] * m[15] +
+  m[8] * m[7] * m[13] +
+  m[12] * m[5] * m[11] -
+  m[12] * m[7] * m[9];
+  
+  inv[12] = -m[4] * m[9] * m[14] +
+  m[4] * m[10] * m[13] +
+  m[8] * m[5] * m[14] -
+  m[8] * m[6] * m[13] -
+  m[12] * m[5] * m[10] +
+  m[12] * m[6] * m[9];
+  
+  inv[1] = -m[1] * m[10] * m[15] +
+  m[1] * m[11] * m[14] +
+  m[9] * m[2] * m[15] -
+  m[9] * m[3] * m[14] -
+  m[13] * m[2] * m[11] +
+  m[13] * m[3] * m[10];
+  
+  inv[5] = m[0] * m[10] * m[15] -
+  m[0] * m[11] * m[14] -
+  m[8] * m[2] * m[15] +
+  m[8] * m[3] * m[14] +
+  m[12] * m[2] * m[11] -
+  m[12] * m[3] * m[10];
+  
+  inv[9] = -m[0] * m[9] * m[15] +
+  m[0] * m[11] * m[13] +
+  m[8] * m[1] * m[15] -
+  m[8] * m[3] * m[13] -
+  m[12] * m[1] * m[11] +
+  m[12] * m[3] * m[9];
+  
+  inv[13] = m[0] * m[9] * m[14] -
+  m[0] * m[10] * m[13] -
+  m[8] * m[1] * m[14] +
+  m[8] * m[2] * m[13] +
+  m[12] * m[1] * m[10] -
+  m[12] * m[2] * m[9];
+  
+  inv[2] = m[1] * m[6] * m[15] -
+  m[1] * m[7] * m[14] -
+  m[5] * m[2] * m[15] +
+  m[5] * m[3] * m[14] +
+  m[13] * m[2] * m[7] -
+  m[13] * m[3] * m[6];
+  
+  inv[6] = -m[0] * m[6] * m[15] +
+  m[0] * m[7] * m[14] +
+  m[4] * m[2] * m[15] -
+  m[4] * m[3] * m[14] -
+  m[12] * m[2] * m[7] +
+  m[12] * m[3] * m[6];
+  
+  inv[10] = m[0] * m[5] * m[15] -
+  m[0] * m[7] * m[13] -
+  m[4] * m[1] * m[15] +
+  m[4] * m[3] * m[13] +
+  m[12] * m[1] * m[7] -
+  m[12] * m[3] * m[5];
+  
+  inv[14] = -m[0] * m[5] * m[14] +
+  m[0] * m[6] * m[13] +
+  m[4] * m[1] * m[14] -
+  m[4] * m[2] * m[13] -
+  m[12] * m[1] * m[6] +
+  m[12] * m[2] * m[5];
+  
+  inv[3] = -m[1] * m[6] * m[11] +
+  m[1] * m[7] * m[10] +
+  m[5] * m[2] * m[11] -
+  m[5] * m[3] * m[10] -
+  m[9] * m[2] * m[7] +
+  m[9] * m[3] * m[6];
+  
+  inv[7] = m[0] * m[6] * m[11] -
+  m[0] * m[7] * m[10] -
+  m[4] * m[2] * m[11] +
+  m[4] * m[3] * m[10] +
+  m[8] * m[2] * m[7] -
+  m[8] * m[3] * m[6];
+  
+  inv[11] = -m[0] * m[5] * m[11] +
+  m[0] * m[7] * m[9] +
+  m[4] * m[1] * m[11] -
+  m[4] * m[3] * m[9] -
+  m[8] * m[1] * m[7] +
+  m[8] * m[3] * m[5];
+  
+  inv[15] = m[0] * m[5] * m[10] -
+  m[0] * m[6] * m[9] -
+  m[4] * m[1] * m[10] +
+  m[4] * m[2] * m[9] +
+  m[8] * m[1] * m[6] -
+  m[8] * m[2] * m[5];
+  
+  det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+  
+  for (i = 0; i < 16; ++i)
+    out[i] = inv[i] / det;
+}
+
+inline void invert_orthonormal(float* out, const float* in)
+{
+  // transpose
+  out[0] = in[0];
+  out[1] = in[4];
+  out[2] = in[8];
+  out[4] = in[1];
+  out[5] = in[5];
+  out[6] = in[9];
+  out[8] = in[2];
+  out[9] = in[6];
+  out[10] = in[10];
+  out[3] = 0;
+  out[7] = 0;
+  out[11] = 0;
+  out[15] = 1;
+  
+  // translation
+  out[12] = -(in[0] * in[12] + in[1] * in[13] + in[2] * in[14]);
+  out[13] = -(in[4] * in[12] + in[5] * in[13] + in[6] * in[14]);
+  out[14] = -(in[8] * in[12] + in[9] * in[13] + in[10] * in[14]);
+}
+
+inline void matrix_multiply(float* out, const float* left, const float* right)
+{
+  for (int i = 0; i < 4; ++i)
+  {
+    for (int j = 0; j < 4; ++j)
+    {
+      out[i + (j << 2)] = left[i] * right[(j << 2)] + left[i + 4] * right[(j << 2) + 1] + left[i + 8] * right[(j << 2) + 2] + left[i + 12] * right[(j << 2) + 3];
+    }
+  }
+}
+} // namespace
+
+void test_array4x4()
+{
+  array4x4<float> m, m2, m_inv, m_inv_inv;
+  float inv[16];
+  m = get_identity<float>();
+  
+  TEST_EQ(1.f, m[0]);
+  TEST_EQ(0.f, m[1]);
+  TEST_EQ(0.f, m[2]);
+  TEST_EQ(0.f, m[3]);
+  TEST_EQ(0.f, m[4]);
+  TEST_EQ(1.f, m[5]);
+  TEST_EQ(0.f, m[6]);
+  TEST_EQ(0.f, m[7]);
+  TEST_EQ(0.f, m[8]);
+  TEST_EQ(0.f, m[9]);
+  TEST_EQ(1.f, m[10]);
+  TEST_EQ(0.f, m[11]);
+  TEST_EQ(0.f, m[12]);
+  TEST_EQ(0.f, m[13]);
+  TEST_EQ(0.f, m[14]);
+  TEST_EQ(1.f, m[15]);
+  
+  for (int i = 0; i < 16; ++i)
+    m2[i] = (float)i;
+  m = transpose(m2);
+  TEST_EQ(0.f, m[0]);
+  TEST_EQ(4.f, m[1]);
+  TEST_EQ(8.f, m[2]);
+  TEST_EQ(12.f, m[3]);
+  TEST_EQ(1.f, m[4]);
+  TEST_EQ(5.f, m[5]);
+  TEST_EQ(9.f, m[6]);
+  TEST_EQ(13.f, m[7]);
+  TEST_EQ(2.f, m[8]);
+  TEST_EQ(6.f, m[9]);
+  TEST_EQ(10.f, m[10]);
+  TEST_EQ(14.f, m[11]);
+  TEST_EQ(3.f, m[12]);
+  TEST_EQ(7.f, m[13]);
+  TEST_EQ(11.f, m[14]);
+  TEST_EQ(15.f, m[15]);
+  
+  m = get_identity<float>();
+  m[0] = 1.f / sqrt(2.f);
+  m[1] = 1.f / sqrt(2.f);
+  m[4] = -1.f / sqrt(2.f);
+  m[5] = 1.f / sqrt(2.f);
+  m[10] = 1.f;
+  m[12] = 31.f;
+  m[13] = 52.f;
+  m[14] = -27.f;
+  
+  invert_orthonormal(inv, m.f.data());
+  
+  m_inv = invert_orthonormal(m);
+  
+  for (int i = 0; i < 16; ++i)
+  {
+    TEST_EQ_CLOSE(inv[i], m_inv[i], 1e-5);
+  }
+  
+  m_inv_inv = invert_orthonormal(m_inv);
+  for (int i = 0; i < 16; ++i)
+  {
+    TEST_EQ_CLOSE(m[i], m_inv_inv[i], 1e-5f);
+  }
+  
+  m = get_identity<float>();
+  m[0] = 1.f / sqrt(2.f);
+  m[1] = 1.f / sqrt(2.f);
+  m[4] = -1.f / sqrt(2.f);
+  m[5] = 1.f / sqrt(2.f);
+  m[10] = 1.f;
+  m[12] = 31.f;
+  m[13] = 52.f;
+  m[14] = -27.f;
+  
+  invert(inv, m.f.data());
+  
+  m_inv = invert(m);
+  
+  for (int i = 0; i < 16; ++i)
+  {
+    TEST_EQ_CLOSE(inv[i], m_inv[i], 1e-5f);
+  }
+  
+  m_inv_inv = invert(m_inv);
+  for (int i = 0; i < 16; ++i)
+  {
+    TEST_EQ_CLOSE(m[i], m_inv_inv[i], 1e-5f);
+  }
+  
+  m[0] = 0.f;
+  m[1] = 3.f;
+  m[2] = 0.f;
+  m[3] = 0.f;
+  
+  m[4] = 2.f;
+  m[5] = 7.f;
+  m[6] = 0.f;
+  m[7] = 1.f;
+  
+  m[8] = 8.f;
+  m[9] = 1.f;
+  m[10] = 1.f;
+  m[11] = 0.f;
+  
+  m[12] = 6.f;
+  m[13] = 0.f;
+  m[14] = 2.f;
+  m[15] = 1.f;
+  
+  invert(inv, m.f.data());
+  
+  m_inv = invert(m);
+  
+  for (int i = 0; i < 16; ++i)
+  {
+    TEST_EQ_CLOSE(inv[i], m_inv[i], 1e-5f);
+  }
+  
+  m_inv_inv = invert(m_inv);
+  for (int i = 0; i < 16; ++i)
+  {
+    TEST_EQ_CLOSE(m[i], m_inv_inv[i], 1e-5f);
+  }
+  
+  m = get_identity<float>();
+  m[0] = 1.f / sqrt(2.f);
+  m[1] = 1.f / sqrt(2.f);
+  m[4] = -1.f / sqrt(2.f);
+  m[5] = 1.f / sqrt(2.f);
+  m[10] = 1.f;
+  m[12] = 31.f;
+  m[13] = 52.f;
+  m[14] = -27.f;
+  
+  std::array<float, 4> v0({{1.f, 0.f, 0.f, 0.f}});
+  auto res = matrix_vector_multiply(m, v0);
+  TEST_EQ(m[0], res[0]);
+  TEST_EQ(m[1], res[1]);
+  TEST_EQ(m[2], res[2]);
+  TEST_EQ(m[3], res[3]);
+  
+  std::array<float, 4> v1({{0.f, 1.f, 0.f, 0.f}});
+  res = matrix_vector_multiply(m, v1);
+  TEST_EQ(m[4], res[0]);
+  TEST_EQ(m[5], res[1]);
+  TEST_EQ(m[6], res[2]);
+  TEST_EQ(m[7], res[3]);
+  
+  std::array<float, 4> v2({{0.f, 0.f, 1.f, 0.f}});
+  res = matrix_vector_multiply(m, v2);
+  TEST_EQ(m[8], res[0]);
+  TEST_EQ(m[9], res[1]);
+  TEST_EQ(m[10], res[2]);
+  TEST_EQ(m[11], res[3]);
+  
+  std::array<float, 4> v3({{0.f, 0.f, 0.f, 1.f}});
+  res = matrix_vector_multiply(m, v3);
+  TEST_EQ(m[12], res[0]);
+  TEST_EQ(m[13], res[1]);
+  TEST_EQ(m[14], res[2]);
+  TEST_EQ(m[15], res[3]);
+  
+  m = get_identity<float>();
+  m[0] = 1.f / sqrt(2.f);
+  m[1] = 1.f / sqrt(2.f);
+  m[4] = -1.f / sqrt(2.f);
+  m[5] = 1.f / sqrt(2.f);
+  m[10] = 1.f;
+  m[12] = 31.f;
+  m[13] = 52.f;
+  m[14] = -27.f;
+  
+  m_inv = invert_orthonormal(m);
+  m2 = matrix_matrix_multiply(m, m_inv);
+  
+  TEST_EQ_CLOSE(1.f, m2[0], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[1], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[2], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[3], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[4], 1e-5f);
+  TEST_EQ_CLOSE(1.f, m2[5], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[6], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[7], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[8], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[9], 1e-5f);
+  TEST_EQ_CLOSE(1.f, m2[10], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[11], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[12], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[13], 1e-5f);
+  TEST_EQ_CLOSE(0.f, m2[14], 1e-5f);
+  TEST_EQ_CLOSE(1.f, m2[15], 1e-5f);
+}
+
 } // anonymous namespace
 
 void run_math_array_tests()
@@ -729,4 +1165,7 @@ void run_math_array_tests()
   run_typed_math_array_tests<double>();
   run_typed_math_array_tests<int>();
   run_typed_math_array_tests<custom_stuff::custom_object>();
+  run_all_lookat_tests();
+  run_all_quaternion_tests();
+  test_array4x4();
 }

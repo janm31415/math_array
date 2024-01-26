@@ -4,6 +4,271 @@
 #include <cmath>
 
 ////////////////////////////////
+// INTERFACE
+////////////////////////////////
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator + (const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator + (const std::array<T, dim>& a, const T s);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator + (const T s, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator - (const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator - (const std::array<T, dim>& a, const T s);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator - (const T s, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator * (const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator * (const std::array<T, dim>& a, const T s);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator * (const T s, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator / (const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator / (const std::array<T, dim>& a, const T s);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator / (const T s, const std::array<T, dim>& b) ;
+
+template <class T, std::size_t dim>
+std::array<T, dim> min(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> max(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> abs(const std::array<T, dim>& a);
+
+template <class T, std::size_t dim>
+std::array<T, dim> sqrt(const std::array<T, dim>& a);
+
+template <class T, std::size_t dim>
+T dot(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+double length(const std::array<T, dim>& a);
+
+template <std::size_t dim>
+float length(const std::array<float, dim> a);
+
+template <class T, std::size_t dim>
+double distance(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <std::size_t dim>
+float distance(const std::array<float, dim>& a, const std::array<float, dim>& b);
+
+template <class T, std::size_t dim>
+T distance_sqr(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> normalize(const std::array<T, dim>& a);
+
+template <class T>
+std::array<T, 3> cross(const std::array<T, 3>& a, const std::array<T, 3>& b);
+
+template <class T>
+std::array<T, 4> cross(const std::array<T, 4>& a, const std::array<T, 4>& b);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator + (const std::array<T, dim>& a);
+
+template <class T, std::size_t dim>
+std::array<T, dim> operator - (const std::array<T, dim>& a);
+
+template <class T, std::size_t dim>
+T min_horizontal(const std::array<T, dim>& a);
+
+template <class T, std::size_t dim>
+T max_horizontal(const std::array<T, dim>& a);
+
+template <class T>
+std::array<T, 4> unpacklo(const std::array<T, 4>& a, const std::array<T, 4>& b);
+
+template <class T>
+std::array<T, 4> unpackhi(const std::array<T, 4>& a, const std::array<T, 4>& b) ;
+
+template <class T>
+void transpose(std::array<T, 4>& r0, std::array<T, 4>& r1, std::array<T, 4>& r2, std::array<T, 4>& r3, const std::array<T, 4>& c0, const std::array<T, 4>& c1, const std::array<T, 4>& c2, const std::array<T, 4>& c3);
+
+template <class T>
+struct array4x4
+{
+  union
+  {
+    std::array<T, 4> col[4];
+    std::array<T, 16> f;
+  };
+  
+  template <typename T1>
+  T& operator [] (T1 i)
+  {
+    return f[i];
+  }
+  
+  template <typename T1>
+  T operator [] (T1 i) const
+  {
+    return f[i];
+  }
+  
+  array4x4() {}
+  array4x4(const std::array<T, 4>& col0, const std::array<T, 4>& col1, const std::array<T, 4>& col2, const std::array<T, 4>& col3) : col { col0, col1, col2, col3 } {}
+  array4x4(const std::array<T, 16>& m) : f(m) {}
+  array4x4(const T* m)
+  {
+    for (int i = 0; i < 16; ++i)
+      f[i] = m[i];
+  }
+};
+
+template <class T>
+array4x4<T> get_identity();
+
+template <class T>
+array4x4<T> make_translation(const T x, const T y, const T z);
+
+template <class T>
+array4x4<T> invert(const array4x4<T>& m);
+
+template <class T>
+array4x4<T> matrix_matrix_multiply(const array4x4<T>& left, const array4x4<T>& right);
+
+template <class T>
+array4x4<T> frustum(T left, T right, T bottom, T top, T near_plane, T far_plane);
+
+template <class T>
+array4x4<T> orthographic(T left, T right, T bottom, T top, T near_plane, T far_plane);
+
+template <class T>
+void solve_roll_pitch_yaw_transformation(T& rx, T& ry, T& rz, T& tx, T& ty, T& tz, const array4x4<T>& m);
+
+template <class T>
+array4x4<T> compute_from_roll_pitch_yaw_transformation(T rx, T ry, T rz, T tx, T ty, T tz);
+
+template <class T>
+array4x4<T> quaternion_to_rotation(const std::array<T, 4>& quaternion);
+
+template <class T>
+std::array<T, 4> quaternion_multiply(const std::array<T, 4>& q1, const std::array<T, 4>& q2);
+
+template <class T>
+std::array<T, 4> quaternion_axis(const std::array<T, 4>& q);
+
+template <class T>
+float quaternion_angle(const std::array<T, 4>& q);
+
+template <class T>
+std::array<T, 4> quaternion_conjugate(const std::array<T, 4>& quaternion);
+
+template <class T>
+std::array<T, 4> quaternion_inverse(const std::array<T, 4>& quaternion);
+
+template <class T>
+std::array<T, 4> quaternion_normalize(const std::array<T, 4>& quaternion);
+
+template <class T>
+array4x4<T> look_at(const std::array<T, 4>& eye, const std::array<T, 4>& center, const std::array<T, 4>& up);
+
+template <class T>
+array4x4<T> look_at(const std::array<T, 3>& eye, const std::array<T, 3>& center, const std::array<T, 3>& up);
+
+template <class T>
+void get_eye_center_up(std::array<T, 3>& eye, std::array<T, 3>& center, std::array<T, 3>& up, const array4x4<T>& transform);
+
+template <class T>
+void get_eye_center_up(std::array<T, 4>& eye, std::array<T, 4>& center, std::array<T, 4>& up, const array4x4<T>& transform);
+
+template <class T>
+std::array<T, 4> roll_pitch_yaw_to_quaternion(T rx, T ry, T rz);
+
+template <class T>
+std::array<T, 4> rotation_to_quaternion(const array4x4<T>& m);
+
+template <class T>
+array4x4<T> transpose(const array4x4<T>& m);
+
+template <class T>
+array4x4<T> invert_orthonormal(const array4x4<T>& m);
+
+template <class T>
+std::array<T, 4> matrix_vector_multiply(const array4x4<T>& m, const std::array<T, 4>& v);
+
+template <class T>
+array4x4<T> operator + (const array4x4<T>& left, const array4x4<T>& right);
+
+template <class T>
+array4x4<T> operator - (const array4x4<T>& left, const array4x4<T>& right);
+
+template <class T>
+array4x4<T> operator / (const array4x4<T>& left, const T value);
+
+template <class T>
+array4x4<T> operator / (const T value, const array4x4<T>& right);
+
+template <class T>
+array4x4<T> operator * (const array4x4<T>& left, const T value);
+
+template <class T>
+array4x4<T> operator * (const T value, const array4x4<T>& right);
+
+template <class T>
+array4x4<T> make_identity();
+
+template <class T>
+array4x4<T> make_transformation(const std::array<T, 4>& origin, const std::array<T, 4>& x_axis, const std::array<T, 4>& y_axis, const std::array<T, 4>& z_axis);
+
+template <class T>
+array4x4<T> make_rotation(const std::array<T, 4>& position, const std::array<T, 4>& dir, T angle_radians);
+
+template <class T>
+array4x4<T> make_scale3d(T scale_x, T scale_y, T scale_z);
+
+template <class T>
+array4x4<T> make_translation(const std::array<T, 4>& translation);
+
+template <class T>
+std::array<T, 4> get_translation(const array4x4<T>& matrix);
+
+template <class T>
+void set_x_axis(array4x4<T>& matrix, const std::array<T, 4>& x);
+
+template <class T>
+void set_y_axis(array4x4<T>& matrix, const std::array<T, 4>& y);
+
+template <class T>
+void set_z_axis(array4x4<T>& matrix, const std::array<T, 4>& z);
+
+template <class T>
+void set_translation(array4x4<T>& matrix, const std::array<T, 4>& t);
+
+template <class T>
+std::array<T, 4> get_x_axis(const array4x4<T>& matrix);
+
+template <class T>
+std::array<T, 4> get_y_axis(const array4x4<T>& matrix);
+
+template <class T>
+std::array<T, 4> get_z_axis(const array4x4<T>& matrix);
+
+////////////////////////////////
+// IMPLEMENTATION
+////////////////////////////////
+
+
+////////////////////////////////
 // operator +
 ////////////////////////////////
 
@@ -805,37 +1070,6 @@ void transpose(std::array<T, 4>& r0, std::array<T, 4>& r1, std::array<T, 4>& r2,
 ////////////////////////////////
 
 template <class T>
-struct array4x4
-{
-  union
-  {
-    std::array<T, 4> col[4];
-    std::array<T, 16> f;
-  };
-  
-  template <typename T1>
-  T& operator [] (T1 i)
-  {
-    return f[i];
-  }
-  
-  template <typename T1>
-  T operator [] (T1 i) const
-  {
-    return f[i];
-  }
-  
-  array4x4() {}
-  array4x4(const std::array<T, 4>& col0, const std::array<T, 4>& col1, const std::array<T, 4>& col2, const std::array<T, 4>& col3) : col { col0, col1, col2, col3 } {}
-  array4x4(const std::array<T, 16>& m) : f(m) {}
-  array4x4(const T* m)
-  {
-    for (int i = 0; i < 16; ++i)
-      f[i] = m[i];
-  }
-};
-
-template <class T>
 array4x4<T> get_identity()
 {
   array4x4<T> m({{static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(1), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
@@ -1019,4 +1253,373 @@ array4x4<T> orthographic(T left, T right, T bottom, T top, T near_plane, T far_p
                   std::array<T, 4>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(-2) / (far_plane - near_plane), -(far_plane + near_plane) / (far_plane - near_plane)),
                   std::array<T, 4>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)));
   return out;
+}
+
+template <class T>
+void solve_roll_pitch_yaw_transformation(T& rx, T& ry, T& rz, T& tx, T& ty, T& tz, const array4x4<T>& m)
+{
+  rz = atan2(m.col[0][1], m.col[0][0]);
+  const auto sg = sin(rz);
+  const auto cg = cos(rz);
+  ry = atan2(-m.col[0][2], m.col[0][0] * cg + m.col[0][1] * sg);
+  rx = atan2(m.col[2][0] * sg - m.col[2][1] * cg, m.col[1][1] * cg - m.col[1][0] * sg);
+  tx = m.col[3][0];
+  ty = m.col[3][1];
+  tz = m.col[3][2];
+}
+
+template <class T>
+array4x4<T> compute_from_roll_pitch_yaw_transformation(T rx, T ry, T rz, T tx, T ty, T tz)
+{
+  array4x4<T> m = get_identity<T>();
+  T ca = cos(rx);
+  T sa = sin(rx);
+  T cb = cos(ry);
+  T sb = sin(ry);
+  T cg = cos(rz);
+  T sg = sin(rz);
+  m.col[0][0] = cb * cg;
+  m.col[1][0] = cg * sa * sb - ca * sg;
+  m.col[2][0] = sa * sg + ca * cg * sb;
+  m.col[0][1] = cb * sg;
+  m.col[1][1] = sa * sb * sg + ca * cg;
+  m.col[2][1] = ca * sb * sg - cg * sa;
+  m.col[0][2] = -sb;
+  m.col[1][2] = cb * sa;
+  m.col[2][2] = ca * cb;
+  m.col[3][0] = tx;
+  m.col[3][1] = ty;
+  m.col[3][2] = tz;
+  return m;
+}
+
+template <class T>
+array4x4<T> quaternion_to_rotation(const std::array<T, 4>& quaternion)
+{
+  array4x4<T> rot;
+  rot[0] = static_cast<T>(1) - static_cast<T>(2) * (quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]);
+  rot[4] = static_cast<T>(2) * (quaternion[0] * quaternion[1] - quaternion[2] * quaternion[3]);
+  rot[8] = static_cast<T>(2) * (quaternion[2] * quaternion[0] + quaternion[1] * quaternion[3]);
+  rot[12] = static_cast<T>(0);
+  
+  rot[1] = static_cast<T>(2) * (quaternion[0] * quaternion[1] + quaternion[2] * quaternion[3]);
+  rot[5] = static_cast<T>(1) - 2.f * (quaternion[2] * quaternion[2] + quaternion[0] * quaternion[0]);
+  rot[9] = static_cast<T>(2) * (quaternion[1] * quaternion[2] - quaternion[0] * quaternion[3]);
+  rot[13] = static_cast<T>(0);
+  
+  rot[2] = static_cast<T>(2) * (quaternion[2] * quaternion[0] - quaternion[1] * quaternion[3]);
+  rot[6] = static_cast<T>(2) * (quaternion[1] * quaternion[2] + quaternion[0] * quaternion[3]);
+  rot[10] = static_cast<T>(1) - static_cast<T>(2) * (quaternion[1] * quaternion[1] + quaternion[0] * quaternion[0]);
+  rot[14] = static_cast<T>(0);
+  
+  rot[3] = static_cast<T>(0);
+  rot[7] = static_cast<T>(0);
+  rot[11] = static_cast<T>(0);
+  rot[15] = static_cast<T>(1);
+  return rot;
+}
+
+template <class T>
+std::array<T, 4> quaternion_multiply(const std::array<T, 4>& q1, const std::array<T, 4>& q2)
+{
+  return std::array<T, 4>({{q1[3] * q2[0] + q1[0] * q2[3] + q1[1] * q2[2] - q1[2] * q2[1],
+                          q1[3] * q2[1] - q1[0] * q2[2] + q1[1] * q2[3] + q1[2] * q2[0],
+                          q1[3] * q2[2] + q1[0] * q2[1] - q1[1] * q2[0] + q1[2] * q2[3],
+                          q1[3] * q2[3] - q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2]}});
+}
+
+template <class T>
+std::array<T, 4> quaternion_axis(const std::array<T, 4>& q)
+{
+  return normalize(std::array<T, 4>{{q[0], q[1], q[2], 0}});
+}
+
+template <class T>
+float quaternion_angle(const std::array<T, 4>& q)
+{
+  return static_cast<T>(2) * acos(q[3]);
+}
+
+template <class T>
+std::array<T, 4> quaternion_conjugate(const std::array<T, 4>& quaternion)
+{
+  return std::array<T, 4>{{-quaternion[0], -quaternion[1], -quaternion[2], quaternion[3]}};
+}
+
+template <class T>
+std::array<T, 4> quaternion_inverse(const std::array<T, 4>& quaternion)
+{
+  T denom = dot(quaternion, quaternion);
+  return quaternion_conjugate(quaternion) / denom;
+}
+
+template <class T>
+std::array<T, 4> quaternion_normalize(const std::array<T, 4>& quaternion)
+{
+  T denom = std::sqrt(dot4(quaternion, quaternion));
+  return quaternion / denom;
+}
+
+template <class T>
+array4x4<T> look_at(const std::array<T, 3>& eye, const std::array<T, 3>& center, const std::array<T, 3>& up)
+{
+  array4x4<T> m;
+  std::array<T, 3> z = normalize(eye - center);
+  std::array<T, 3> x = normalize(cross(up, z));
+  std::array<T, 3> y = cross(z, x);
+  std::array<T, 4> X{{x[0], y[0], z[0], static_cast<T>(0)}};
+  std::array<T, 4> Y{{x[1], y[1], z[1], static_cast<T>(0)}};
+  std::array<T, 4> Z{{x[2], y[2], z[2], static_cast<T>(0)}};
+  std::array<T, 4> W{{-dot(x, eye), -dot(y, eye), -dot(z, eye), static_cast<T>(1)}};
+  m.col[0] = X;
+  m.col[1] = Y;
+  m.col[2] = Z;
+  m.col[3] = W;
+  return m;
+}
+
+template <class T>
+array4x4<T> look_at(const std::array<T, 4>& eye, const std::array<T, 4>& center, const std::array<T, 4>& up)
+{
+  array4x4<T> m;
+  std::array<T, 4> z = normalize(eye - center);
+  std::array<T, 4> x = normalize(cross(up, z));
+  std::array<T, 4> y = cross(z, x);
+  std::array<T, 4> X{{x[0], y[0], z[0], static_cast<T>(0)}};
+  std::array<T, 4> Y{{x[1], y[1], z[1], static_cast<T>(0)}};
+  std::array<T, 4> Z{{x[2], y[2], z[2], static_cast<T>(0)}};
+  std::array<T, 4> W{{-dot(x, eye), -dot(y, eye), -dot(z, eye), static_cast<T>(1)}};
+  m.col[0] = X;
+  m.col[1] = Y;
+  m.col[2] = Z;
+  m.col[3] = W;
+  return m;
+}
+
+template <class T>
+void get_eye_center_up(std::array<T, 3>& eye, std::array<T, 3>& center, std::array<T, 3>& up, const array4x4<T>& transform)
+{
+  array4x4<T> tr_inv = invert_orthonormal(transform);
+  eye[0] = tr_inv[12];
+  eye[1] = tr_inv[13];
+  eye[2] = tr_inv[14];
+  
+  up = {{tr_inv[4], tr_inv[5], tr_inv[6]}};
+  center = eye - std::array<T, 3>({{tr_inv[8], tr_inv[9], tr_inv[10]}});
+}
+
+template <class T>
+void get_eye_center_up(std::array<T, 4>& eye, std::array<T, 4>& center, std::array<T, 4>& up, const array4x4<T>& transform)
+{
+  array4x4<T> tr_inv = invert_orthonormal(transform);
+  eye[0] = tr_inv[12];
+  eye[1] = tr_inv[13];
+  eye[2] = tr_inv[14];
+  eye[3] = 1;
+  
+  up = {{tr_inv[4], tr_inv[5], tr_inv[6], static_cast<T>(0)}};
+  center = eye - std::array<T, 4>({{tr_inv[8], tr_inv[9], tr_inv[10], 0}});
+}
+
+template <class T>
+std::array<T, 4> roll_pitch_yaw_to_quaternion(T rx, T ry, T rz)
+{
+  T cy = cos(rz / static_cast<T>(2));
+  T sy = sin(rz / static_cast<T>(2));
+  T cp = cos(ry / static_cast<T>(2));
+  T sp = sin(ry / static_cast<T>(2));
+  T cr = cos(rx / static_cast<T>(2));
+  T sr = sin(rx / static_cast<T>(2));
+  
+  std::array<T, 4> q;
+  q[0] = sr * cp * cy - cr * sp * sy;
+  q[1] = cr * sp * cy + sr * cp * sy;
+  q[2] = cr * cp * sy - sr * sp * cy;
+  q[3] = cr * cp * cy + sr * sp * sy;
+  return q;
+}
+
+template <class T>
+std::array<T, 4> rotation_to_quaternion(const array4x4<T>& m)
+{
+  T rz = std::atan2(m.col[0][1], m.col[0][0]);
+  const auto sg = std::sin(rz);
+  const auto cg = std::cos(rz);
+  T ry = atan2(-m.col[0][2], m.col[0][0] * cg + m.col[0][1] * sg);
+  T rx = atan2(m.col[2][0] * sg - m.col[2][1] * cg, m.col[1][1] * cg - m.col[1][0] * sg);
+  return roll_pitch_yaw_to_quaternion(rx, ry, rz);
+}
+
+template <class T>
+array4x4<T> transpose(const array4x4<T>& m)
+{
+  array4x4<T> out;
+  transpose(out.col[0], out.col[1], out.col[2], out.col[3], m.col[0], m.col[1], m.col[2], m.col[3]);
+  return out;
+}
+
+template <class T>
+array4x4<T> invert_orthonormal(const array4x4<T>& m)
+{
+  array4x4<T> out;
+  transpose(out.col[0], out.col[1], out.col[2], out.col[3], m.col[0], m.col[1], m.col[2], std::array<T, 4>{{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
+  out.col[3] = -(out.col[0] * m[12] + out.col[1] * m[13] + out.col[2] * m[14]);
+  out.f[15] = static_cast<T>(1);
+  return out;
+}
+
+template <class T>
+std::array<T, 4> matrix_vector_multiply(const array4x4<T>& m, const std::array<T, 4>& v)
+{
+  std::array<T, 4> out = m.col[0] * v[0] + m.col[1] * v[1] + m.col[2] * v[2] + m.col[3] * v[3];
+  return out;
+}
+
+template <class T>
+array4x4<T> operator + (const array4x4<T>& left, const array4x4<T>& right)
+{
+  return array4x4<T>(left.col[0] + right.col[0], left.col[1] + right.col[1], left.col[2] + right.col[2], left.col[3] + right.col[3]);
+}
+
+template <class T>
+array4x4<T> operator - (const array4x4<T>& left, const array4x4<T>& right)
+{
+  return array4x4<T>(left.col[0] - right.col[0], left.col[1] - right.col[1], left.col[2] - right.col[2], left.col[3] - right.col[3]);
+}
+
+template <class T>
+array4x4<T> operator / (const array4x4<T>& left, const T value)
+{
+  return array4x4<T>(left.col[0] / value, left.col[1] / value, left.col[2] / value, left.col[3] / value);
+}
+
+template <class T>
+array4x4<T> operator / (const T value, const array4x4<T>& right)
+{
+  return array4x4<T>(value / right.col[0], value / right.col[1], value / right.col[2], value / right.col[3]);
+}
+
+
+template <class T>
+array4x4<T> operator * (const array4x4<T>& left, const T value)
+{
+  return array4x4<T>(left.col[0] * value, left.col[1] * value, left.col[2] * value, left.col[3] * value);
+}
+
+template <class T>
+array4x4<T> operator * (const T value, const array4x4<T>& right)
+{
+  return array4x4<T>(value * right.col[0], value * right.col[1], value * right.col[2], value * right.col[3]);
+}
+
+template <class T>
+array4x4<T> make_identity()
+{
+  return get_identity<T>();
+}
+
+template <class T>
+array4x4<T> make_transformation(const std::array<T, 4>& origin, const std::array<T, 4>& x_axis, const std::array<T, 4>& y_axis, const std::array<T, 4>& z_axis)
+{
+  array4x4<T> matrix(x_axis, y_axis, z_axis, origin);
+  matrix.col[0][3] = static_cast<T>(0);
+  matrix.col[1][3] = static_cast<T>(0);
+  matrix.col[2][3] = static_cast<T>(0);
+  matrix.col[3][3] = static_cast<T>(1);
+  
+  return matrix;
+}
+
+template <class T>
+array4x4<T> make_rotation(const std::array<T, 4>& position, const std::array<T, 4>& dir, T angle_radians)
+{
+  auto matrix = make_identity<T>();
+  auto direction = normalize(dir);
+  
+  auto cos_alpha = cos(angle_radians);
+  auto sin_alpha = sin(angle_radians);
+  
+  matrix[0] = (direction[0] * direction[0]) * (1 - cos_alpha) + cos_alpha;
+  matrix[4] = (direction[0] * direction[1]) * (1 - cos_alpha) - direction[2] * sin_alpha;
+  matrix[8] = (direction[0] * direction[2]) * (1 - cos_alpha) + direction[1] * sin_alpha;
+  
+  matrix[1] = (direction[0] * direction[1]) * (1 - cos_alpha) + direction[2] * sin_alpha;
+  matrix[5] = (direction[1] * direction[1]) * (1 - cos_alpha) + cos_alpha;
+  matrix[9] = (direction[1] * direction[2]) * (1 - cos_alpha) - direction[0] * sin_alpha;
+  
+  matrix[2] = (direction[0] * direction[2]) * (1 - cos_alpha) - direction[1] * sin_alpha;
+  matrix[6] = (direction[1] * direction[2]) * (1 - cos_alpha) + direction[0] * sin_alpha;
+  matrix[10] = (direction[2] * direction[2]) * (1 - cos_alpha) + cos_alpha;
+  
+  auto rotated_position = matrix_vector_multiply(matrix, position);
+  
+  matrix[12] = position[0] - rotated_position[0];
+  matrix[13] = position[1] - rotated_position[1];
+  matrix[14] = position[2] - rotated_position[2];
+  
+  return matrix;
+}
+
+template <class T>
+array4x4<T> make_scale3d(T scale_x, T scale_y, T scale_z)
+{
+  array4x4<T> m({{static_cast<T>(scale_x), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(scale_y), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(scale_z), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
+}
+
+template <class T>
+array4x4<T> make_translation(const std::array<T, 4>& translation)
+{
+  return make_translation(translation[0], translation[1], translation[2]);
+}
+
+template <class T>
+std::array<T, 4> get_translation(const array4x4<T>& matrix)
+{
+  return matrix.col[3];
+}
+
+template <class T>
+void set_x_axis(array4x4<T>& matrix, const std::array<T, 4>& x)
+{
+  matrix.col[0] = x;
+  matrix.col[0][3] = static_cast<T>(0);
+}
+
+template <class T>
+void set_y_axis(array4x4<T>& matrix, const std::array<T, 4>& y)
+{
+  matrix.col[1] = y;
+  matrix.col[1][3] = static_cast<T>(0);
+}
+
+template <class T>
+void set_z_axis(array4x4<T>& matrix, const std::array<T, 4>& z)
+{
+  matrix.col[2] = z;
+  matrix.col[2][3] = static_cast<T>(0);
+}
+
+template <class T>
+void set_translation(array4x4<T>& matrix, const std::array<T, 4>& t)
+{
+  matrix.col[3] = t;
+  matrix.col[3][3] = static_cast<T>(1);
+}
+
+template <class T>
+std::array<T, 4> get_x_axis(const array4x4<T>& matrix)
+{
+  return matrix.col[0];
+}
+
+template <class T>
+std::array<T, 4> get_y_axis(const array4x4<T>& matrix)
+{
+  return matrix.col[1];
+}
+
+template <class T>
+std::array<T, 4> get_z_axis(const array4x4<T>& matrix)
+{
+  return matrix.col[2];
 }
