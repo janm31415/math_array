@@ -3,6 +3,9 @@
 #include <array>
 #include <cmath>
 
+//namespace ma
+//  {
+
 ////////////////////////////////
 // operator +
 ////////////////////////////////
@@ -359,9 +362,9 @@ std::array<T, 4> max(const std::array<T, 4> a, const std::array<T, 4> b) {
 
 template <class T, std::size_t dim>
 std::array<T, dim> abs(const std::array<T, dim> a) {
-  std::array<T, dim> res(a);
+  std::array<T, dim> res;
   for (std::size_t i = 0; i < dim; ++i)
-    res[i] = res[i] < 0 ? -res[i] : res[i];
+    res[i] = a[i] < 0 ? -a[i] : a[i];
   return res;
 }
 
@@ -439,3 +442,32 @@ inline std::array<long double, 3> abs(const std::array<long double, 3> a) {
 inline std::array<long double, 4> abs(const std::array<long double, 4> a) {
   return { fabs(a[0]), fabs(a[1]), fabs(a[2]), fabs(a[3])};
 }
+
+////////////////////////////////
+// operator sqrt
+////////////////////////////////
+
+template <class T, std::size_t dim>
+std::array<T, dim> sqrt(const std::array<T, dim> a) {
+  std::array<T, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = static_cast<T>(sqrt(a[i]));
+  return res;
+}
+
+template <class T>
+std::array<T, 2> sqrt(const std::array<T, 2> a) {
+  return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])) };
+}
+
+template <class T>
+std::array<T, 3> sqrt(const std::array<T, 3> a) {
+  return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])), static_cast<T>(sqrt(a[2])) };
+}
+
+template <class T>
+std::array<T, 4> sqrt(const std::array<T, 4> a) {
+  return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])), static_cast<T>(sqrt(a[2])), static_cast<T>(sqrt(a[3])) };
+}
+
+//  } // namespace

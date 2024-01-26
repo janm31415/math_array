@@ -1,11 +1,13 @@
 #include "math_array_tests.h"
+#include "test_assert.h"
 
 #include "../math_array.h"
-#include "test_assert.h"
 
 #define NDIM 10
 
-namespace
+//using namespace ma;
+
+namespace custom_stuff
 {
 
   struct custom_object
@@ -20,21 +22,8 @@ namespace
         }
       bool operator < (const custom_object& other) const
         {
-        return other._value < _value;
+        return _value < other._value;
         }
-        /*
-      bool operator >= (const custom_object& other) const
-        {
-        return !(*this < other);
-        }
-      bool operator > (const custom_object& other) const
-        {
-        return other._value > _value;
-        }
-      bool operator <= (const custom_object& other) const
-        {
-        return !(*this > other);
-        }*/
       bool operator != (const custom_object& other) const
         {
         return !(other == *this);
@@ -62,12 +51,20 @@ namespace
       double _value;
     };
     
+    custom_object sqrt(const custom_object& o)
+      {
+      return custom_object(::sqrt(o._value));
+      }
+    
     std::ostream& operator <<(std::ostream& stream, const custom_object& obj)
       {
       stream << obj._value;
       return stream;
       }
 
+}
+
+namespace {
   template <class T>
   struct math_array_fixture
   {
@@ -105,7 +102,7 @@ namespace
   struct add_vectors : public math_array_fixture<T>
   {
     void test()
-    {
+    {      
       auto res2 = this->a2 + this->b2; // Usage of this-> to make it compile with XCode. Don't know why this is necessary. Maybe the compiler has issues with the template usage?
       for (int i = 0; i < 2; ++i)
         TEST_EQ(this->a2[i] + this->b2[i], res2[i]);
@@ -344,7 +341,27 @@ namespace
       for (int i = 0; i < NDIM; ++i)
         TEST_EQ(this->an[i] < 0 ? -this->an[i] : this->an[i], resn[i]);
     }
-  };  
+  };
+  
+  template <class T>
+  struct sqrt_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = sqrt(abs(this->a2));
+      for (int i = 0; i < 2; ++i)
+        TEST_EQ(static_cast<T>(sqrt(this->a2[i] < 0 ? -this->a2[i] : this->a2[i])), res2[i]);
+      auto res3 = sqrt(abs(this->a3));
+      for (int i = 0; i < 3; ++i)
+        TEST_EQ(static_cast<T>(sqrt(this->a3[i] < 0 ? -this->a3[i] : this->a3[i])), res3[i]);
+      auto res4 = sqrt(abs(this->a4));
+      for (int i = 0; i < 4; ++i)
+        TEST_EQ(static_cast<T>(sqrt(this->a4[i] < 0 ? -this->a4[i] : this->a4[i])), res4[i]);
+      auto resn = sqrt(abs(this->an));
+      for (int i = 0; i < NDIM; ++i)
+        TEST_EQ(static_cast<T>(sqrt(this->an[i] < 0 ? -this->an[i] : this->an[i])), resn[i]);
+    }
+  };   
   
   template <class T>
   void run_typed_math_array_tests()
@@ -356,6 +373,7 @@ namespace
     min_vectors<T>().test();
     max_vectors<T>().test();
     abs_vectors<T>().test();
+    sqrt_vectors<T>().test();
   }
 }
 
@@ -364,5 +382,5 @@ void run_math_array_tests()
   run_typed_math_array_tests<float>();
   run_typed_math_array_tests<double>();
   run_typed_math_array_tests<int>();
-  run_typed_math_array_tests<custom_object>();
+  run_typed_math_array_tests<custom_stuff::custom_object>();
 }
