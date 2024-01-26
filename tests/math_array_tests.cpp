@@ -51,9 +51,9 @@ namespace custom_stuff
       double _value;
     };
     
-    custom_object sqrt(const custom_object& o)
+    double sqrt(const custom_object& o)
       {
-      return custom_object(::sqrt(o._value));
+      return ::sqrt(o._value);
       }
     
     std::ostream& operator <<(std::ostream& stream, const custom_object& obj)
@@ -361,6 +361,73 @@ namespace {
       for (int i = 0; i < NDIM; ++i)
         TEST_EQ(static_cast<T>(sqrt(this->an[i] < 0 ? -this->an[i] : this->an[i])), resn[i]);
     }
+  };
+  
+  template <class T>
+  struct dot_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = dot(this->a2, this->b2);
+      TEST_EQ(this->a2[0]*this->b2[0] + this->a2[1]*this->b2[1], res2);
+      auto res3 = dot(this->a3, this->b3);
+      TEST_EQ(this->a3[0]*this->b3[0] + this->a3[1]*this->b3[1] + this->a3[2]*this->b3[2], res3);
+      auto res4 = dot(this->a4, this->b4);
+      TEST_EQ(this->a4[0]*this->b4[0] + this->a4[1]*this->b4[1] + this->a4[2]*this->b4[2] + this->a4[3]*this->b4[3], res4);
+      auto resn = dot(this->an, this->bn);
+      T expected = static_cast<T>(0);
+      for (int i = 0; i < NDIM; ++i)
+        expected = expected + this->an[i]*this->bn[i];
+      TEST_EQ(expected, resn);
+    }
+  };
+  
+  template <class T>
+  struct length_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = length(this->a2);
+      TEST_EQ(sqrt(dot(this->a2, this->a2)), res2);
+      auto res3 = length(this->a3);
+      TEST_EQ(sqrt(dot(this->a3, this->a3)), res3);
+      auto res4 = length(this->a4);
+      TEST_EQ(sqrt(dot(this->a4, this->a4)), res4);
+      auto resn = length(this->an);
+      TEST_EQ(sqrt(dot(this->an, this->an)), resn);
+    }
+  };
+  
+  template <class T>
+  struct distance_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = distance(this->a2, this->b2);
+      TEST_EQ(sqrt(dot(this->a2-this->b2, this->a2-this->b2)), res2);
+      auto res3 = distance(this->a3, this->b3);
+      TEST_EQ(sqrt(dot(this->a3-this->b3, this->a3-this->b3)), res3);
+      auto res4 = distance(this->a4, this->b4);
+      TEST_EQ(sqrt(dot(this->a4-this->b4, this->a4-this->b4)), res4);
+      auto resn = distance(this->an, this->bn);
+      TEST_EQ(sqrt(dot(this->an-this->bn, this->an-this->bn)), resn);
+    }
+  };
+  
+  template <class T>
+  struct distance_sqr_vectors : public math_array_fixture<T>
+  {
+    void test()
+    {
+      auto res2 = distance_sqr(this->a2, this->b2);
+      TEST_EQ(dot(this->a2-this->b2, this->a2-this->b2), res2);
+      auto res3 = distance_sqr(this->a3, this->b3);
+      TEST_EQ(dot(this->a3-this->b3, this->a3-this->b3), res3);
+      auto res4 = distance_sqr(this->a4, this->b4);
+      TEST_EQ(dot(this->a4-this->b4, this->a4-this->b4), res4);
+      auto resn = distance_sqr(this->an, this->bn);
+      TEST_EQ(dot(this->an-this->bn, this->an-this->bn), resn);
+    }
   };   
   
   template <class T>
@@ -374,6 +441,10 @@ namespace {
     max_vectors<T>().test();
     abs_vectors<T>().test();
     sqrt_vectors<T>().test();
+    dot_vectors<T>().test();
+    length_vectors<T>().test();
+    distance_vectors<T>().test();
+    distance_sqr_vectors<T>().test();    
   }
 }
 

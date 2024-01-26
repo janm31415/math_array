@@ -470,4 +470,71 @@ std::array<T, 4> sqrt(const std::array<T, 4> a) {
   return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])), static_cast<T>(sqrt(a[2])), static_cast<T>(sqrt(a[3])) };
 }
 
+////////////////////////////////
+// operator dot
+////////////////////////////////
+
+template <class T, std::size_t dim>
+T dot(const std::array<T, dim> a, const std::array<T, dim> b) {
+  T res = static_cast<T>(0);
+  for (std::size_t i = 0; i < dim; ++i)
+    res = res + static_cast<T>(a[i]*b[i]);
+  return res;
+}
+
+template <class T>
+T dot(const std::array<T, 2> a, const std::array<T, 2> b) {
+  return static_cast<T>(a[0]*b[0] + a[1]*b[1]);
+}
+
+template <class T>
+T dot(const std::array<T, 3> a, const std::array<T, 3> b) {
+    return static_cast<T>(a[0]*b[0] + a[1]*b[1] + a[2]*b[2]);
+}
+
+template <class T>
+T dot(const std::array<T, 4> a, const std::array<T, 4> b) {
+  return static_cast<T>(a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]);
+}
+
+////////////////////////////////
+// operator length
+////////////////////////////////
+
+template <class T, std::size_t dim>
+double length(const std::array<T, dim> a) {
+  return sqrt(dot(a,a));
+}
+
+template <std::size_t dim>
+float length(const std::array<float, dim> a) {
+  return sqrt(dot(a,a));
+}
+
+////////////////////////////////
+// operator distance
+////////////////////////////////
+
+template <class T, std::size_t dim>
+double distance(const std::array<T, dim> a, const std::array<T, dim> b) {
+  auto c = a-b;
+  return sqrt(dot(c,c));
+}
+
+template <std::size_t dim>
+float distance(const std::array<float, dim> a, const std::array<float, dim> b) {
+  auto c = a-b;
+  return sqrt(dot(c,c));
+}
+
+////////////////////////////////
+// operator distance_sqr
+////////////////////////////////
+
+template <class T, std::size_t dim>
+T distance_sqr(const std::array<T, dim> a, const std::array<T, dim> b) {
+  auto c = a-b;
+  return dot(c,c);
+}
+
 //  } // namespace
