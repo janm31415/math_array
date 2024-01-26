@@ -667,6 +667,11 @@ std::array<T, 3> cross(const std::array<T, 3>& a, const std::array<T, 3>& b) {
   return {a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]};
 }
 
+template <class T>
+std::array<T, 4> cross(const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return {a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0], static_cast<T>(0)};
+}
+
 ////////////////////////////////
 // unary operator +
 ////////////////////////////////
@@ -701,4 +706,96 @@ std::array<T, 3> operator - (const std::array<T, 3>& a) {
 template <class T>
 std::array<T, 4> operator - (const std::array<T, 4>& a) {
   return { -a[0], -a[1], -a[2], -a[3]};
+}
+
+////////////////////////////////
+// min_horizontal
+////////////////////////////////
+
+template <class T, std::size_t dim>
+T min_horizontal(const std::array<T, dim>& a) {
+  if (a.empty())
+    return static_cast<T>(0);
+  T res = a[0];
+  for (std::size_t i = 1; i < dim; ++i)
+    res = a[i] < res ? a[i] : res;
+  return res;
+}
+
+template <class T>
+T min_horizontal(const std::array<T, 2>& a) {
+  return a[0] < a[1] ? a[0] : a[1];
+}
+
+template <class T>
+T min_horizontal(const std::array<T, 3>& a) {
+  return a[0] < a[1] ? (a[0] < a[2] ? a[0] : a[2]) : (a[1] < a[2] ? a[1] : a[2]);
+}
+
+template <class T>
+T min_horizontal(const std::array<T, 4>& a) {
+  return a[0] < a[1] ? (a[0] < a[2] ? (a[0] < a[3] ? a[0] : a[3]) : (a[2] < a[3] ? a[2] : a[3])) : (a[1] < a[2] ? (a[1] < a[3] ? a[1] : a[3]) : (a[2] < a[3] ? a[2] : a[3]));
+}
+
+////////////////////////////////
+// max_horizontal
+////////////////////////////////
+
+template <class T, std::size_t dim>
+T max_horizontal(const std::array<T, dim>& a) {
+  if (a.empty())
+    return static_cast<T>(0);
+  T res = a[0];
+  for (std::size_t i = 1; i < dim; ++i)
+    res = res < a[i] ? a[i] : res;
+  return res;
+}
+
+template <class T>
+T max_horizontal(const std::array<T, 2>& a) {
+  return a[0] < a[1] ? a[1] : a[0];
+}
+
+template <class T>
+T max_horizontal(const std::array<T, 3>& a) {
+  return a[0] < a[1] ? (a[1] < a[2] ? a[2] : a[1]) : (a[0] < a[2] ? a[2] : a[0]);
+}
+
+template <class T>
+T max_horizontal(const std::array<T, 4>& a) {
+  return a[0] < a[1] ? (a[1] < a[2] ? (a[2] < a[3] ? a[3] : a[2]) : (a[1] < a[3] ? a[3] : a[1])) : (a[0] < a[2] ? (a[2] < a[3] ? a[3] : a[2]) : (a[0] < a[3] ? a[3] : a[0]));
+}
+
+////////////////////////////////
+// operator unpacklo
+////////////////////////////////
+
+template <class T>
+std::array<T, 4> unpacklo(const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return {a[0], b[0], a[1], b[1]};
+}
+
+////////////////////////////////
+// operator unpackhi
+////////////////////////////////
+
+template <class T>
+std::array<T, 4> unpackhi(const std::array<T, 4>& a, const std::array<T, 4>& b) {
+  return {a[2], b[2], a[3], b[3]};
+}
+
+////////////////////////////////
+// operator transpose
+////////////////////////////////
+
+template <class T>
+void transpose(std::array<T, 4>& r0, std::array<T, 4>& r1, std::array<T, 4>& r2, std::array<T, 4>& r3, const std::array<T, 4>& c0, const std::array<T, 4>& c1, const std::array<T, 4>& c2, const std::array<T, 4>& c3) {
+  std::array<T, 4> l02 = unpacklo(c0, c2);
+  std::array<T, 4> h02 = unpackhi(c0, c2);
+  std::array<T, 4> l13 = unpacklo(c1, c3);
+  std::array<T, 4> h13 = unpackhi(c1, c3);
+  r0 = unpacklo(l02, l13);
+  r1 = unpackhi(l02, l13);
+  r2 = unpacklo(h02, h13);
+  r3 = unpackhi(h02, h13);
 }
