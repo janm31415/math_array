@@ -505,6 +505,39 @@ namespace {
   };
   
   template <class T>
+  struct unary_sign_ops : public math_array_fixture<T>
+  {
+    void test()
+    {
+    auto res2 = +this->a2;
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i], res2[i]);
+    auto res3 = +this->a3;
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i], res3[i]);
+    auto res4 = +this->a4;
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i], res4[i]);
+    auto resn = +this->an;
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i], resn[i]);
+      
+    res2 = -this->a2;
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(-this->a2[i], res2[i]);
+    res3 = -this->a3;
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(-this->a3[i], res3[i]);
+    res4 = -this->a4;
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(-this->a4[i], res4[i]);
+    resn = -this->an;
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(-this->an[i], resn[i]);
+    }
+  };
+  
+  template <class T>
   void run_typed_math_array_tests()
   {
     add_vectors<T>().test();
@@ -522,6 +555,7 @@ namespace {
     normalize_vectors<T>().test();
     compare_vectors<T>().test();
     cross_vectors<T>().test();
+    unary_sign_ops<T>().test();
   }
 } // anonymous namespace
 
