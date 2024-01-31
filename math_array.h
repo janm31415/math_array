@@ -1896,6 +1896,8 @@ std::vector<std::array<T, dim>> k_means(const std::array<T, dim>* X, std::size_t
   using ::operator*;
   using ::operator+;
   //Given: cluster size "k", mini-batch size "batch_size", iterations "iterations", data set "X".
+  if (k == 0)
+    return std::vector<std::array<T, dim>>();
   if (k >= Xsize)
     {
     std::vector<std::array<T, dim>> C(X, X+Xsize);
