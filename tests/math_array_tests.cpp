@@ -1252,14 +1252,14 @@ void test_array_tree()
   float distance_sqr = 1000.f;
   for (uint32_t i = 0; i < (uint32_t)points.size(); ++i)
   {
-    uint32_t closest = tree.find_nearest(distance_sqr, points[i]);
+    uint64_t closest = tree.find_nearest(distance_sqr, points[i]);
     TEST_EQ(0.f, distance_sqr);
     TEST_EQ(i, closest);
   }
   for (uint32_t i = 0; i < (uint32_t)points.size(); ++i)
   {
     auto pt = points[i] +  std::array<float, 3>({{0.1f, 0.0f, 0.0f}});
-    uint32_t closest = tree.find_nearest(distance_sqr, pt);
+    uint64_t closest = tree.find_nearest(distance_sqr, pt);
     TEST_EQ_CLOSE(0.1f*0.1f, distance_sqr, 1e-5f);
     TEST_EQ(i, closest);
   }

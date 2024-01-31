@@ -300,7 +300,7 @@ class array_tree
 {
 public:
   array_tree();
-  uint32_t find_nearest(T& distance_sqr, const std::array<T, dim>& pt) const;
+  uint64_t find_nearest(T& distance_sqr, const std::array<T, dim>& pt) const;
   
   template <class Iter>
   void build_tree(Iter first, Iter last);
@@ -315,22 +315,22 @@ private:
     T distance_sqr(const std::array<T, dim>& pt) const;
     
     std::array<T, dim> _min, _max;
-    uint32_t _tag;
+    uint64_t _tag;
   };
   
   struct array_tree_node
   {
     aabb_node _node;
-    uint32_t _child_1, _child_2;
+    uint64_t _child_1, _child_2;
   };
   
   struct leaf
   {
     std::array<T, dim> pt;
-    uint32_t index;
+    uint64_t index;
   };
   
-  uint32_t _optimise(typename std::vector<leaf>::iterator first, typename std::vector<leaf>::iterator last, uint32_t level);
+  uint64_t _optimise(typename std::vector<leaf>::iterator first, typename std::vector<leaf>::iterator last, uint32_t level);
   
   std::vector<array_tree_node> _nodes;
 };
@@ -1781,18 +1781,18 @@ T array_tree<T, dim>::aabb_node::distance_sqr(const std::array<T, dim>& pt) cons
 
 
 template <class T, std::size_t dim>
-uint32_t array_tree<T, dim>::find_nearest(T& dist_sqr, const std::array<T, dim>& pt) const
+uint64_t array_tree<T, dim>::find_nearest(T& dist_sqr, const std::array<T, dim>& pt) const
 {
-  std::vector<uint32_t> stack;
-  uint32_t best_node = 0;
+  std::vector<uint64_t> stack;
+  uint64_t best_node = 0;
   T best_distance_sqr = distance_sqr(_nodes[best_node]._node._min, pt);
-  stack.push_back((uint32_t)(_nodes.size()-1)); // put root on the stack
+  stack.push_back(_nodes.size()-1); // put root on the stack
   while (!stack.empty())
   {
-    const uint32_t node_id = stack.back();
+    const uint64_t node_id = stack.back();
     stack.pop_back();
     const auto& n = _nodes[node_id];
-    if (n._child_1 == 0xffffffff) // a leaf
+    if (n._child_1 == 0xffffffffffffffff) // a leaf
     {
       T distsqr = distance_sqr(_nodes[node_id]._node._min, pt);
       if (distsqr < best_distance_sqr)
@@ -1840,12 +1840,12 @@ template <class T, std::size_t dim>
 template <class Iter>
 void array_tree<T, dim>::build_tree(Iter first, Iter last)
 {
-  uint32_t size = (uint32_t)std::distance(first, last);
+  std::size_t size = std::distance(first, last);
   _nodes.clear();
   _nodes.reserve(size*2);
   std::vector<leaf> leafs;
   leafs.reserve(size);
-  for (uint32_t i = 0; i < size; ++i)
+  for (std::size_t i = 0; i < size; ++i)
   {
     leaf l;
     l.pt = *first++;
@@ -1862,7 +1862,7 @@ bool array_tree<T, dim>::empty() const
 }
 
 template <class T, std::size_t dim>
-uint32_t array_tree<T, dim>::_optimise(typename std::vector<leaf>::iterator first, typename std::vector<leaf>::iterator last, uint32_t level)
+uint64_t array_tree<T, dim>::_optimise(typename std::vector<leaf>::iterator first, typename std::vector<leaf>::iterator last, uint32_t level)
 {
   array_tree_node n;
   typename std::vector<leaf>::iterator mid = first + (last - first) / 2;
@@ -1879,13 +1879,13 @@ uint32_t array_tree<T, dim>::_optimise(typename std::vector<leaf>::iterator firs
   }
   else
   {
-    n._child_1 = 0xffffffff;
-    n._child_2 = 0xffffffff;
+    n._child_1 = 0xffffffffffffffff;
+    n._child_2 = 0xffffffffffffffff;
     n._node._tag = first->index;
     n._node._min = first->pt;
     n._node._max = first->pt;
   }
-  const uint32_t ret_val = (uint32_t)_nodes.size();
+  const uint64_t ret_val = (uint64_t)_nodes.size();
   _nodes.push_back(n);
   return ret_val;
 }
