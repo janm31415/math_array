@@ -462,7 +462,7 @@ struct normalize_vectors : public math_array_fixture<T>
 {
   void test()
   {
-    using namespace ma;  
+    using namespace ma;
     auto res2 = normalize(this->a2);
     for (int i = 0; i < 2; ++i)
       TEST_EQ(static_cast<T>(this->a2[i])/static_cast<T>(sqrt(dot(this->a2, this->a2))), res2[i]);
@@ -1176,6 +1176,95 @@ void test_array4x4()
   TEST_EQ_CLOSE(1.f, m2[15], 1e-5f);
 }
 
+void test_array_tree()
+{
+  using namespace ma;
+  std::vector<std::array<float, 3>> points;
+  points.push_back({{ 0.f, 0.f, 0.f}});
+  points.push_back({{ 1.f, 0.f, 0.f}});
+  points.push_back({{ 2.f, 0.f, 0.f}});
+  points.push_back({{ 3.f, 0.f, 0.f}});
+  points.push_back({{ 0.f, 1.f, 0.f}});
+  points.push_back({{ 1.f, 1.f, 0.f}});
+  points.push_back({{ 2.f, 1.f, 0.f}});
+  points.push_back({{ 3.f, 1.f, 0.f}});
+  points.push_back({{ 0.f, 2.f, 0.f}});
+  points.push_back({{ 1.f, 2.f, 0.f}});
+  points.push_back({{ 2.f, 2.f, 0.f}});
+  points.push_back({{ 3.f, 2.f, 0.f}});
+  points.push_back({{ 0.f, 3.f, 0.f}});
+  points.push_back({{ 1.f, 3.f, 0.f}});
+  points.push_back({{ 2.f, 3.f, 0.f}});
+  points.push_back({{ 3.f, 3.f, 0.f}});
+  points.push_back({{ 0.f, 0.f, 1.f}});
+  points.push_back({{ 1.f, 0.f, 1.f}});
+  points.push_back({{ 2.f, 0.f, 1.f}});
+  points.push_back({{ 3.f, 0.f, 1.f}});
+  points.push_back({{ 0.f, 1.f, 1.f}});
+  points.push_back({{ 1.f, 1.f, 1.f}});
+  points.push_back({{ 2.f, 1.f, 1.f}});
+  points.push_back({{ 3.f, 1.f, 1.f}});
+  points.push_back({{ 0.f, 2.f, 1.f}});
+  points.push_back({{ 1.f, 2.f, 1.f}});
+  points.push_back({{ 2.f, 2.f, 1.f}});
+  points.push_back({{ 3.f, 2.f, 1.f}});
+  points.push_back({{ 0.f, 3.f, 1.f}});
+  points.push_back({{ 1.f, 3.f, 1.f}});
+  points.push_back({{ 2.f, 3.f, 1.f}});
+  points.push_back({{ 3.f, 3.f, 1.f}});
+  points.push_back({{ 0.f, 0.f, 2.f}});
+  points.push_back({{ 1.f, 0.f, 2.f}});
+  points.push_back({{ 2.f, 0.f, 2.f}});
+  points.push_back({{ 3.f, 0.f, 2.f}});
+  points.push_back({{ 0.f, 1.f, 2.f}});
+  points.push_back({{ 1.f, 1.f, 2.f}});
+  points.push_back({{ 2.f, 1.f, 2.f}});
+  points.push_back({{ 3.f, 1.f, 2.f}});
+  points.push_back({{ 0.f, 2.f, 2.f}});
+  points.push_back({{ 1.f, 2.f, 2.f}});
+  points.push_back({{ 2.f, 2.f, 2.f}});
+  points.push_back({{ 3.f, 2.f, 2.f}});
+  points.push_back({{ 0.f, 3.f, 2.f}});
+  points.push_back({{ 1.f, 3.f, 2.f}});
+  points.push_back({{ 2.f, 3.f, 2.f}});
+  points.push_back({{ 3.f, 3.f, 2.f}});
+  points.push_back({{ 0.f, 0.f, 3.f}});
+  points.push_back({{ 1.f, 0.f, 3.f}});
+  points.push_back({{ 2.f, 0.f, 3.f}});
+  points.push_back({{ 3.f, 0.f, 3.f}});
+  points.push_back({{ 0.f, 1.f, 3.f}});
+  points.push_back({{ 1.f, 1.f, 3.f}});
+  points.push_back({{ 2.f, 1.f, 3.f}});
+  points.push_back({{ 3.f, 1.f, 3.f}});
+  points.push_back({{ 0.f, 2.f, 3.f}});
+  points.push_back({{ 1.f, 2.f, 3.f}});
+  points.push_back({{ 2.f, 2.f, 3.f}});
+  points.push_back({{ 3.f, 2.f, 3.f}});
+  points.push_back({{ 0.f, 3.f, 3.f}});
+  points.push_back({{ 1.f, 3.f, 3.f}});
+  points.push_back({{ 2.f, 3.f, 3.f}});
+  points.push_back({{ 3.f, 3.f, 3.f}});
+  
+  array_tree<float, 3> tree;
+  TEST_ASSERT(tree.empty());
+  tree.build_tree(points.begin(), points.end());
+  TEST_ASSERT(!tree.empty());
+  float distance_sqr = 1000.f;
+  for (uint32_t i = 0; i < (uint32_t)points.size(); ++i)
+  {
+    uint32_t closest = tree.find_nearest(distance_sqr, points[i]);
+    TEST_EQ(0.f, distance_sqr);
+    TEST_EQ(i, closest);
+  }
+  for (uint32_t i = 0; i < (uint32_t)points.size(); ++i)
+  {
+    auto pt = points[i] +  std::array<float, 3>({{0.1f, 0.0f, 0.0f}});
+    uint32_t closest = tree.find_nearest(distance_sqr, pt);
+    TEST_EQ_CLOSE(0.1f*0.1f, distance_sqr, 1e-5f);
+    TEST_EQ(i, closest);
+  }
+}
+
 } // anonymous namespace
 
 void run_math_array_tests()
@@ -1187,4 +1276,5 @@ void run_math_array_tests()
   run_all_lookat_tests();
   run_all_quaternion_tests();
   test_array4x4();
+  test_array_tree();
 }
