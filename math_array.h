@@ -295,6 +295,51 @@ std::array<T, 4> get_y_axis(const array4x4<T>& matrix);
 template <class T>
 std::array<T, 4> get_z_axis(const array4x4<T>& matrix);
 
+template <class T, std::size_t dim>
+class array_tree
+{
+public:
+  array_tree();
+  uint32_t find_nearest(T& distance_sqr, const std::array<T, dim>& pt) const;
+  
+  template <class Iter>
+  void build_tree(Iter first, Iter last);
+  
+  bool empty() const;
+  
+private:
+  struct aabb_node
+  {
+    aabb_node();
+    aabb_node(const aabb_node& left, const aabb_node& right) ;
+    T distance_sqr(const std::array<T, dim>& pt) const;
+    
+    std::array<T, dim> _min, _max;
+    uint32_t _tag;
+  };
+  
+  struct array_tree_node
+  {
+    aabb_node _node;
+    uint32_t _child_1, _child_2;
+  };
+  
+  struct leaf
+  {
+    std::array<T, dim> pt;
+    uint32_t index;
+  };
+  
+  uint32_t _optimise(typename std::vector<leaf>::iterator first, typename std::vector<leaf>::iterator last, uint32_t level);
+  
+  std::vector<array_tree_node> _nodes;
+};
+
+// Web-Scale K-Means Clustering. D. Sculley
+// Returns a cluster of size k
+template <class T, std::size_t dim>
+std::vector<std::array<T, dim>> k_means(const std::array<T, dim>* X, std::size_t Xsize, std::size_t k, std::size_t batch_size, uint32_t iterations, uint64_t seed = 7967805708226634297);
+
 } // namespace ma
 
 ////////////////////////////////
@@ -1702,68 +1747,38 @@ std::array<T, 4> get_z_axis(const array4x4<T>& matrix)
 }
 
 template <class T, std::size_t dim>
-class array_tree
-{
-public:
-  array_tree();
-  uint32_t find_nearest(T& distance_sqr, const std::array<T, dim>& pt) const;
-  
-  template <class Iter>
-  void build_tree(Iter first, Iter last);
-  
-  bool empty() const;
-  
-private:
-  struct aabb_node
-  {
-    aabb_node() : _tag(0xffffffff) {}
-    aabb_node(const aabb_node& left, const aabb_node& right) : _min(left._min), _max(left._max), _tag(0xffffffff)
-    {
-      for (std::size_t i = 0; i < dim; ++i)
-      {
-        _min[i] = std::min<T>(_min[i], right._min[i]);
-        _max[i] = std::max<T>(_max[i], right._max[i]);
-      }
-    }
-    
-    T Sqr(T value) const
-    {
-      return value * value;
-    }
-    
-    T distance_sqr(const std::array<T, dim>& pt) const
-    {
-      T dist = Sqr(pt[0] - std::min<T>(_max[0], std::max<T>(_min[0], pt[0])));
-      for (std::size_t i = 1; i < dim; ++i)
-        dist += Sqr(pt[i] - std::min<T>(_max[i], std::max<T>(_min[i], pt[i])));
-      return dist;
-    }
-    
-    std::array<T, dim> _min, _max;
-    uint32_t _tag;
-  };
-  
-  struct array_tree_node
-  {
-    aabb_node _node;
-    uint32_t _child_1, _child_2;
-  };
-  
-  struct leaf
-  {
-    std::array<T, dim> pt;
-    uint32_t index;
-  };
-  
-  uint32_t _optimise(typename std::vector<leaf>::iterator first, typename std::vector<leaf>::iterator last, uint32_t level);
-  
-  std::vector<array_tree_node> _nodes;
-};
-
-template <class T, std::size_t dim>
 array_tree<T, dim>::array_tree()
 {
 }
+
+template <class T, std::size_t dim>
+array_tree<T, dim>::aabb_node::aabb_node() : _tag(0xffffffff) {}
+
+template <class T, std::size_t dim>
+array_tree<T, dim>::aabb_node::aabb_node(const aabb_node& left, const aabb_node& right) : _min(left._min), _max(left._max), _tag(0xffffffff)
+{
+  for (std::size_t i = 0; i < dim; ++i)
+  {
+    _min[i] = _min[i] < right._min[i] ? _min[i] : right._min[i];
+    _max[i] = _max[i] < right._max[i] ? right._max[i] : _max[i];
+  }
+}
+
+template <class T, std::size_t dim>
+T array_tree<T, dim>::aabb_node::distance_sqr(const std::array<T, dim>& pt) const
+{
+  T tmp = (_min[0] < pt[0] ? pt[0] : _min[0]);
+  tmp = pt[0] - (_max[0] < tmp ? _max[0] : tmp);
+  T dist = tmp*tmp;
+  for (std::size_t i = 1; i < dim; ++i)
+  {
+    tmp = (_min[i] < pt[i] ? pt[i] : _min[i]);
+    tmp = pt[i] - (_max[i] < tmp ? _max[i] : tmp);
+    dist += tmp*tmp;
+  }
+  return dist;
+}
+
 
 template <class T, std::size_t dim>
 uint32_t array_tree<T, dim>::find_nearest(T& dist_sqr, const std::array<T, dim>& pt) const
@@ -1873,6 +1888,78 @@ uint32_t array_tree<T, dim>::_optimise(typename std::vector<leaf>::iterator firs
   const uint32_t ret_val = (uint32_t)_nodes.size();
   _nodes.push_back(n);
   return ret_val;
+}
+
+template <class T, std::size_t dim>
+std::vector<std::array<T, dim>> k_means(const std::array<T, dim>* X, std::size_t Xsize, std::size_t k, std::size_t batch_size, uint32_t iterations, uint64_t seed)
+{
+  using ::operator*;
+  using ::operator+;
+  //Given: cluster size "k", mini-batch size "batch_size", iterations "iterations", data set "X".
+  if (k >= Xsize)
+    {
+    std::vector<std::array<T, dim>> C(X, X+Xsize);
+    return C;
+    }
+  if (batch_size >= Xsize)
+    batch_size = Xsize;
+  //Initialize pseudo random number generator
+  uint64_t rnd_state = seed;
+  //Initialize each c in C with an x picked randomly from X
+  std::vector<std::array<T, dim>> C;
+  C.reserve(k);
+  while (C.size() < k)
+    {
+    while (C.size() < k)
+    {
+      rnd_state ^= (rnd_state << 13);
+      rnd_state ^= (rnd_state >> 7);
+      rnd_state ^= (rnd_state << 17);
+      std::size_t x = static_cast<std::size_t>(rnd_state % Xsize);
+      C.push_back(X[x]);
+    }
+    std::sort(C.begin(), C.end());
+    C.erase(std::unique(C.begin(), C.end()), C.end());
+  }
+  std::vector<uint32_t> v(C.size(), 0);
+  for (uint32_t iter = 0; iter < iterations; ++iter)
+  {
+    ma::array_tree<T, dim> tree;
+    tree.build_tree(C.begin(), C.end());
+    std::vector<std::size_t> M;
+    M.reserve(batch_size);
+    std::vector<std::size_t> closest_cluster_indices(batch_size, 0);
+    if (batch_size == Xsize)
+      {
+      for (std::size_t i = 0; i < batch_size; ++i)
+        {
+        M.push_back(i);
+        T dist_sqr;
+        closest_cluster_indices[i] = tree.find_nearest(dist_sqr, X[i]);
+        }
+      }
+    else
+      {
+      for (std::size_t i = 0; i < batch_size; ++i)
+      {
+        rnd_state ^= (rnd_state << 13);
+        rnd_state ^= (rnd_state >> 7);
+        rnd_state ^= (rnd_state << 17);
+        std::size_t x = static_cast<std::size_t>(rnd_state % Xsize);
+        M.push_back(x);
+        T dist_sqr;
+        closest_cluster_indices[i] = tree.find_nearest(dist_sqr, X[x]);
+      }
+      }
+    for (std::size_t i = 0; i < batch_size; ++i)
+    {
+      std::size_t c = closest_cluster_indices[i];
+      v[c] = v[c] + 1;
+      T eta = static_cast<T>(1) / static_cast<T>(v[c]);
+      C[c] = (static_cast<T>(1) - eta)*C[c] + eta*X[M[i]];
+    }
+  }
+  return C;
 }
 
 } // namespace ma

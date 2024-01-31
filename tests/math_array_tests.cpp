@@ -1265,6 +1265,94 @@ void test_array_tree()
   }
 }
 
+void test_k_means()
+  {
+  using namespace ma;
+  std::vector<std::array<float, 3>> points;
+  points.push_back({{ 0.f, 0.f, 0.f}});
+  points.push_back({{ 1.f, 0.f, 0.f}});
+  points.push_back({{ 2.f, 0.f, 0.f}});
+  points.push_back({{ 3.f, 0.f, 0.f}});
+  points.push_back({{ 0.f, 1.f, 0.f}});
+  points.push_back({{ 1.f, 1.f, 0.f}});
+  points.push_back({{ 2.f, 1.f, 0.f}});
+  points.push_back({{ 3.f, 1.f, 0.f}});
+  points.push_back({{ 0.f, 2.f, 0.f}});
+  points.push_back({{ 1.f, 2.f, 0.f}});
+  points.push_back({{ 2.f, 2.f, 0.f}});
+  points.push_back({{ 3.f, 2.f, 0.f}});
+  points.push_back({{ 0.f, 3.f, 0.f}});
+  points.push_back({{ 1.f, 3.f, 0.f}});
+  points.push_back({{ 2.f, 3.f, 0.f}});
+  points.push_back({{ 3.f, 3.f, 0.f}});
+  points.push_back({{ 0.f, 0.f, 1.f}});
+  points.push_back({{ 1.f, 0.f, 1.f}});
+  points.push_back({{ 2.f, 0.f, 1.f}});
+  points.push_back({{ 3.f, 0.f, 1.f}});
+  points.push_back({{ 0.f, 1.f, 1.f}});
+  points.push_back({{ 1.f, 1.f, 1.f}});
+  points.push_back({{ 2.f, 1.f, 1.f}});
+  points.push_back({{ 3.f, 1.f, 1.f}});
+  points.push_back({{ 0.f, 2.f, 1.f}});
+  points.push_back({{ 1.f, 2.f, 1.f}});
+  points.push_back({{ 2.f, 2.f, 1.f}});
+  points.push_back({{ 3.f, 2.f, 1.f}});
+  points.push_back({{ 0.f, 3.f, 1.f}});
+  points.push_back({{ 1.f, 3.f, 1.f}});
+  points.push_back({{ 2.f, 3.f, 1.f}});
+  points.push_back({{ 3.f, 3.f, 1.f}});
+  points.push_back({{ 0.f, 0.f, 2.f}});
+  points.push_back({{ 1.f, 0.f, 2.f}});
+  points.push_back({{ 2.f, 0.f, 2.f}});
+  points.push_back({{ 3.f, 0.f, 2.f}});
+  points.push_back({{ 0.f, 1.f, 2.f}});
+  points.push_back({{ 1.f, 1.f, 2.f}});
+  points.push_back({{ 2.f, 1.f, 2.f}});
+  points.push_back({{ 3.f, 1.f, 2.f}});
+  points.push_back({{ 0.f, 2.f, 2.f}});
+  points.push_back({{ 1.f, 2.f, 2.f}});
+  points.push_back({{ 2.f, 2.f, 2.f}});
+  points.push_back({{ 3.f, 2.f, 2.f}});
+  points.push_back({{ 0.f, 3.f, 2.f}});
+  points.push_back({{ 1.f, 3.f, 2.f}});
+  points.push_back({{ 2.f, 3.f, 2.f}});
+  points.push_back({{ 3.f, 3.f, 2.f}});
+  points.push_back({{ 0.f, 0.f, 3.f}});
+  points.push_back({{ 1.f, 0.f, 3.f}});
+  points.push_back({{ 2.f, 0.f, 3.f}});
+  points.push_back({{ 3.f, 0.f, 3.f}});
+  points.push_back({{ 0.f, 1.f, 3.f}});
+  points.push_back({{ 1.f, 1.f, 3.f}});
+  points.push_back({{ 2.f, 1.f, 3.f}});
+  points.push_back({{ 3.f, 1.f, 3.f}});
+  points.push_back({{ 0.f, 2.f, 3.f}});
+  points.push_back({{ 1.f, 2.f, 3.f}});
+  points.push_back({{ 2.f, 2.f, 3.f}});
+  points.push_back({{ 3.f, 2.f, 3.f}});
+  points.push_back({{ 0.f, 3.f, 3.f}});
+  points.push_back({{ 1.f, 3.f, 3.f}});
+  points.push_back({{ 2.f, 3.f, 3.f}});
+  points.push_back({{ 3.f, 3.f, 3.f}});
+  
+  int k = 32;
+  auto cluster = k_means(points.data(), points.size(), k, 64, 10);
+  TEST_EQ(k, cluster.size());
+  
+  k = 4;
+  cluster = k_means(points.data(), points.size(), k, 32, 10);
+  TEST_EQ(k, cluster.size());
+  
+  k = 64;
+  cluster = k_means(points.data(), points.size(), k, 128, 10);
+  TEST_EQ(k, cluster.size());
+  for (uint32_t i = 0; i < k; ++i)
+    {
+    TEST_EQ(points[i][0], cluster[i][0]);
+    TEST_EQ(points[i][1], cluster[i][1]);
+    TEST_EQ(points[i][2], cluster[i][2]);
+    }
+  }
+
 } // anonymous namespace
 
 void run_math_array_tests()
@@ -1277,4 +1365,5 @@ void run_math_array_tests()
   run_all_quaternion_tests();
   test_array4x4();
   test_array_tree();
+  test_k_means();
 }
