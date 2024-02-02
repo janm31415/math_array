@@ -23,9 +23,10 @@
  */
 #pragma once
 
+#include <algorithm>
 #include <array>
-#include <vector>
 #include <cmath>
+#include <vector>
 
 ////////////////////////////////
 // INTERFACE
