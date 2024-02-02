@@ -1345,7 +1345,7 @@ void test_k_means()
   k = 64;
   cluster = k_means(points.data(), points.size(), k, 128, 10);
   TEST_EQ(k, cluster.size());
-  for (uint32_t i = 0; i < k; ++i)
+  for (int i = 0; i < k; ++i)
     {
     TEST_EQ(points[i][0], cluster[i][0]);
     TEST_EQ(points[i][1], cluster[i][1]);
