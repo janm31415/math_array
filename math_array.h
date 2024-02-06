@@ -296,6 +296,12 @@ std::array<T, 4> get_y_axis(const array4x4<T>& matrix);
 template <class T>
 std::array<T, 4> get_z_axis(const array4x4<T>& matrix);
 
+template <class T>
+std::array<T, 3> transform_point(const array4x4<T>& matrix, const std::array<T, 3>& point);
+
+template <class T>
+std::array<T, 3> transform_direction(const array4x4<T>& matrix, const std::array<T, 3>& dir);
+
 template <class T, std::size_t dim>
 class array_tree
 {
@@ -1578,6 +1584,18 @@ std::array<T, 4> matrix_vector_multiply(const array4x4<T>& m, const std::array<T
   using ::operator+;
   std::array<T, 4> out = m.col[0] * v[0] + m.col[1] * v[1] + m.col[2] * v[2] + m.col[3] * v[3];
   return out;
+}
+
+template <class T>
+std::array<T, 3> transform_point(const array4x4<T>& m, const std::array<T, 3>& v)
+{
+  return {{ m.f[0]*v[0] + m.f[4]*v[1] + m.f[8]*v[2] + m.f[12], m.f[1]*v[0] + m.f[5]*v[1] + m.f[9]*v[2] + m.f[13], m.f[2]*v[0] + m.f[6]*v[1] + m.f[10]*v[2] + m.f[14]}};
+}
+
+template <class T>
+std::array<T, 3> transform_direction(const array4x4<T>& m, const std::array<T, 3>& v)
+{
+  return {{ m.f[0]*v[0] + m.f[4]*v[1] + m.f[8]*v[2], m.f[1]*v[0] + m.f[5]*v[1] + m.f[9]*v[2], m.f[2]*v[0] + m.f[6]*v[1] + m.f[10]*v[2]}};
 }
 
 template <class T>

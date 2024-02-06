@@ -1145,6 +1145,34 @@ void test_array4x4()
   TEST_EQ(m[14], res[2]);
   TEST_EQ(m[15], res[3]);
   
+  std::array<float, 3> w0({{1.f, 0.f, 0.f}});
+  auto res2 = transform_point(m, w0);
+  TEST_EQ(m[0]+m[12], res2[0]);
+  TEST_EQ(m[1]+m[13], res2[1]);
+  TEST_EQ(m[2]+m[14], res2[2]);
+  std::array<float, 3> w1({{0.f, 1.f, 0.f}});
+  res2 = transform_point(m, w1);
+  TEST_EQ(m[4]+m[12], res2[0]);
+  TEST_EQ(m[5]+m[13], res2[1]);
+  TEST_EQ(m[6]+m[14], res2[2]);
+  std::array<float, 3> w2({{0.f, 0.f, 1.f}});
+  res2 = transform_point(m, w2);
+  TEST_EQ(m[8]+m[12], res2[0]);
+  TEST_EQ(m[9]+m[13], res2[1]);
+  TEST_EQ(m[10]+m[14], res2[2]);
+  res2 = transform_direction(m, w0);
+  TEST_EQ(m[0], res2[0]);
+  TEST_EQ(m[1], res2[1]);
+  TEST_EQ(m[2], res2[2]);
+  res2 = transform_direction(m, w1);
+  TEST_EQ(m[4], res2[0]);
+  TEST_EQ(m[5], res2[1]);
+  TEST_EQ(m[6], res2[2]);
+  res2 = transform_direction(m, w2);
+  TEST_EQ(m[8], res2[0]);
+  TEST_EQ(m[9], res2[1]);
+  TEST_EQ(m[10], res2[2]);  
+  
   m = get_identity<float>();
   m[0] = 1.f / sqrt(2.f);
   m[1] = 1.f / sqrt(2.f);
