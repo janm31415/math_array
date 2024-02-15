@@ -1460,6 +1460,7 @@ template <class T>
 std::array<T, 4> quaternion_normalize(const std::array<T, 4>& quaternion)
 {
   using ::operator/;
+  using ::sqrt;
   T denom = sqrt(dot(quaternion, quaternion));
   return quaternion / denom;
 }
