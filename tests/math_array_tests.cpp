@@ -524,6 +524,48 @@ struct geq_vectors : public math_array_fixture<T>
 };
 
 template <class T>
+struct eq_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    using namespace ma;
+    auto res2 = eq(this->a2, this->b2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i] == this->b2[i] ? -1 : 0, res2[i]);
+    auto res3 = eq(this->a3, this->b3);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i] == this->b3[i] ? -1 : 0, res3[i]);
+    auto res4 = eq(this->a4, this->b4);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i] == this->b4[i] ? -1 : 0, res4[i]);
+    auto resn = eq(this->an, this->bn);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i] == this->bn[i] ? -1 : 0, resn[i]);
+  }
+};
+
+template <class T>
+struct neq_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    using namespace ma;
+    auto res2 = neq(this->a2, this->b2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(!(this->a2[i] == this->b2[i]) ? -1 : 0, res2[i]);
+    auto res3 = neq(this->a3, this->b3);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(!(this->a3[i] == this->b3[i]) ? -1 : 0, res3[i]);
+    auto res4 = neq(this->a4, this->b4);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(!(this->a4[i] == this->b4[i]) ? -1 : 0, res4[i]);
+    auto resn = neq(this->an, this->bn);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(!(this->an[i] == this->bn[i]) ? -1 : 0, resn[i]);
+  }
+};
+
+template <class T>
 struct abs_vectors : public math_array_fixture<T>
 {
   void test()
@@ -909,6 +951,8 @@ void run_typed_math_array_tests()
   leq_vectors<T>().test();
   greater_vectors<T>().test();
   geq_vectors<T>().test();
+  eq_vectors<T>().test();
+  neq_vectors<T>().test();
   abs_vectors<T>().test();
   sqrt_vectors<T>().test();
   dot_vectors<T>().test();

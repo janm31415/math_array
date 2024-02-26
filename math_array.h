@@ -119,6 +119,12 @@ template <class T, std::size_t dim>
 std::array<int, dim> geq(const std::array<T, dim>& a, const std::array<T, dim>& b);
 
 template <class T, std::size_t dim>
+std::array<int, dim> eq(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<int, dim> neq(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
 T dot(const std::array<T, dim>& a, const std::array<T, dim>& b);
 
 template <class T, std::size_t dim>
@@ -1274,6 +1280,68 @@ std::array<int, dim> geq(const std::array<T, dim>& a, const std::array<T, dim>& 
   std::array<int, dim> res;
   for (std::size_t i = 0; i < dim; ++i)
     res[i] = !(a[i] < b[i]) ? -1 : 0;
+  return res;
+}
+
+////////////////////////////////
+// operator eq
+////////////////////////////////
+
+template <class T>
+std::array<int, 2> eq(const std::array<T, 2>& a, const std::array<T, 2>& b)
+{
+  return {{a[0] == b[0] ? -1 : 0, a[1] == b[1] ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 3> eq(const std::array<T, 3>& a, const std::array<T, 3>& b)
+{
+  return {{a[0] == b[0] ? -1 : 0, a[1] == b[1] ? -1 : 0, a[2] == b[2] ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 4> eq(const std::array<T, 4>& a, const std::array<T, 4>& b)
+{
+  return {{a[0] == b[0] ? -1 : 0, a[1] == b[1] ? -1 : 0, a[2] == b[2] ? -1 : 0, a[3] == b[3] ? -1 : 0}};
+}
+
+template <class T, std::size_t dim>
+std::array<int, dim> eq(const std::array<T, dim>& a, const std::array<T, dim>& b)
+{
+  std::array<int, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = a[i] == b[i] ? -1 : 0;
+  return res;
+}
+
+////////////////////////////////
+// operator neq
+////////////////////////////////
+
+template <class T>
+std::array<int, 2> neq(const std::array<T, 2>& a, const std::array<T, 2>& b)
+{
+  return {{!(a[0] == b[0]) ? -1 : 0, !(a[1] == b[1]) ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 3> neq(const std::array<T, 3>& a, const std::array<T, 3>& b)
+{
+  return {{!(a[0] == b[0]) ? -1 : 0, !(a[1] == b[1]) ? -1 : 0, !(a[2] == b[2]) ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 4> neq(const std::array<T, 4>& a, const std::array<T, 4>& b)
+{
+  return {{!(a[0] == b[0]) ? -1 : 0, !(a[1] == b[1]) ? -1 : 0, !(a[2] == b[2]) ? -1 : 0, !(a[3] == b[3]) ? -1 : 0}};
+}
+
+template <class T, std::size_t dim>
+std::array<int, dim> neq(const std::array<T, dim>& a, const std::array<T, dim>& b)
+{
+  std::array<int, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = !(a[i] == b[i]) ? -1 : 0;
   return res;
 }
 
