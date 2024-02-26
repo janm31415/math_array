@@ -67,12 +67,12 @@ struct math_array_fixture
 {
   math_array_fixture()
   {
-    a2 = { { -1,4} };
-    b2 = { { 3,-2} };
-    a3 = { { -1,2,6} };
-    b3 = { { 4,-5,3} };
-    a4 = { { -1,2,3,8 } };
-    b4 = { { 5,-6,7,4} };
+    a2 = { { (T)-1,(T)4} };
+    b2 = { { (T)3,(T)-2} };
+    a3 = { { (T)-1,(T)2,(T)6} };
+    b3 = { { (T)4,(T)-5,(T)3} };
+    a4 = { { (T)-1,(T)2,(T)3,(T)8 } };
+    b4 = { { (T)5,(T)-6,(T)7,(T)4} };
     for (int i = 0; i < NDIM; ++i)
     {
       an[i] = static_cast<T>(i + 1);
@@ -301,6 +301,97 @@ struct divide_vectors : public math_array_fixture<T>
   }
 };
 
+template <class T>
+struct and_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    auto res2 = this->a2 & this->b2; // Usage of this-> to make it compile with XCode. Don't know why this is necessary. Maybe the compiler has issues with the template usage?
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i] & this->b2[i], res2[i]);
+    auto res3 = this->a3 & this->b3;
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i] & this->b3[i], res3[i]);
+    auto res4 = this->a4 & this->b4;
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i] & this->b4[i], res4[i]);
+    auto resn = this->an & this->bn;
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i] & this->bn[i], resn[i]);
+    
+    res2 = this->a2 & static_cast<T>(2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i] & static_cast<T>(2), res2[i]);
+    res3 = this->a3 & static_cast<T>(2);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i] & static_cast<T>(2), res3[i]);
+    res4 = this->a4 & static_cast<T>(2);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i] & static_cast<T>(2), res4[i]);
+    resn = this->an & static_cast<T>(2);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i] & static_cast<T>(2), resn[i]);
+    
+    res2 = static_cast<T>(2) & this->b2;
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(static_cast<T>(2) & this->b2[i], res2[i]);
+    res3 = static_cast<T>(2) & this->b3;
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(static_cast<T>(2) & this->b3[i], res3[i]);
+    res4 = static_cast<T>(2) & this->b4;
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(static_cast<T>(2) & this->b4[i], res4[i]);
+    resn = static_cast<T>(2) & this->bn;
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(static_cast<T>(2) & this->bn[i], resn[i]);
+  }
+};
+
+template <class T>
+struct or_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    auto res2 = this->a2 | this->b2; // Usage of this-> to make it compile with XCode. Don't know why this is necessary. Maybe the compiler has issues with the template usage?
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i] | this->b2[i], res2[i]);
+    auto res3 = this->a3 | this->b3;
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i] | this->b3[i], res3[i]);
+    auto res4 = this->a4 | this->b4;
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i] | this->b4[i], res4[i]);
+    auto resn = this->an | this->bn;
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i] | this->bn[i], resn[i]);
+    
+    res2 = this->a2 | static_cast<T>(2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i] | static_cast<T>(2), res2[i]);
+    res3 = this->a3 | static_cast<T>(2);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i] | static_cast<T>(2), res3[i]);
+    res4 = this->a4 | static_cast<T>(2);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i] | static_cast<T>(2), res4[i]);
+    resn = this->an | static_cast<T>(2);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i] | static_cast<T>(2), resn[i]);
+    
+    res2 = static_cast<T>(2) | this->b2;
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(static_cast<T>(2) | this->b2[i], res2[i]);
+    res3 = static_cast<T>(2) | this->b3;
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(static_cast<T>(2) | this->b3[i], res3[i]);
+    res4 = static_cast<T>(2) | this->b4;
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(static_cast<T>(2) | this->b4[i], res4[i]);
+    resn = static_cast<T>(2) | this->bn;
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(static_cast<T>(2) | this->bn[i], resn[i]);
+  }
+};
 
 template <class T>
 struct min_vectors : public math_array_fixture<T>
@@ -1388,6 +1479,10 @@ void run_math_array_tests()
   run_typed_math_array_tests<float>();
   run_typed_math_array_tests<double>();
   run_typed_math_array_tests<int>();
+  and_vectors<int>().test();
+  or_vectors<int>().test();
+  and_vectors<uint32_t>().test();
+  or_vectors<uint32_t>().test();
   run_typed_math_array_tests<custom_stuff::custom_object>();
   run_all_lookat_tests();
   run_all_quaternion_tests();
