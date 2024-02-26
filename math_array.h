@@ -124,6 +124,12 @@ std::array<int, dim> eq(const std::array<T, dim>& a, const std::array<T, dim>& b
 template <class T, std::size_t dim>
 std::array<int, dim> neq(const std::array<T, dim>& a, const std::array<T, dim>& b);
 
+template <std::size_t dim>
+int any(const std::array<int, dim>& b);
+
+template <std::size_t dim>
+int none(const std::array<int, dim>& b);
+
 template <class T, std::size_t dim>
 T dot(const std::array<T, dim>& a, const std::array<T, dim>& b);
 
@@ -1344,6 +1350,47 @@ std::array<int, dim> neq(const std::array<T, dim>& a, const std::array<T, dim>& 
     res[i] = !(a[i] == b[i]) ? -1 : 0;
   return res;
 }
+
+////////////////////////////////
+// operator any
+////////////////////////////////
+
+template <>
+int any(const std::array<int, 2>& b)
+  {
+  return b[0] | b[1];
+  }
+  
+template <>
+int any(const std::array<int, 3>& b)
+  {
+  return b[0] | b[1] | b[2];
+  }
+  
+template <>
+int any(const std::array<int, 4>& b)
+  {
+  return b[0] | b[1] | b[2] | b[3];
+  }  
+
+template <std::size_t dim>
+int any(const std::array<int, dim>& b)
+  {
+  int res = 0;
+  for (std::size_t i = 0; i < dim; ++i)
+    res |= b[i];
+  return res;
+  }
+
+////////////////////////////////
+// operator none
+////////////////////////////////
+
+template <std::size_t dim>
+int none(const std::array<int, dim>& b)
+  {
+  return !(any(b));
+  }
 
 ////////////////////////////////
 // operator dot
