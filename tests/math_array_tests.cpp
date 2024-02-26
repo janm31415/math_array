@@ -25,6 +25,10 @@ struct custom_object
   {
     return _value < other._value;
   }
+  bool operator <= (const custom_object& other) const
+  {
+    return _value <= other._value;
+  }  
   custom_object operator - () const
   {
     return custom_object(-_value);
@@ -436,6 +440,90 @@ struct max_vectors : public math_array_fixture<T>
 };
 
 template <class T>
+struct less_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    using namespace ma;
+    auto res2 = less(this->a2, this->b2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i] < this->b2[i] ? -1 : 0, res2[i]);
+    auto res3 = less(this->a3, this->b3);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i] < this->b3[i] ? -1 : 0, res3[i]);
+    auto res4 = less(this->a4, this->b4);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i] < this->b4[i] ? -1 : 0, res4[i]);
+    auto resn = less(this->an, this->bn);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i] < this->bn[i] ? -1 : 0, resn[i]);
+  }
+};
+
+template <class T>
+struct leq_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    using namespace ma;
+    auto res2 = leq(this->a2, this->b2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->a2[i] <= this->b2[i] ? -1 : 0, res2[i]);
+    auto res3 = leq(this->a3, this->b3);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->a3[i] <= this->b3[i] ? -1 : 0, res3[i]);
+    auto res4 = leq(this->a4, this->b4);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->a4[i] <= this->b4[i] ? -1 : 0, res4[i]);
+    auto resn = leq(this->an, this->bn);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->an[i] <= this->bn[i] ? -1 : 0, resn[i]);
+  }
+};
+
+template <class T>
+struct greater_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    using namespace ma;
+    auto res2 = greater(this->a2, this->b2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->b2[i] < this->a2[i] ? -1 : 0, res2[i]);
+    auto res3 = greater(this->a3, this->b3);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->b3[i] < this->a3[i] ? -1 : 0, res3[i]);
+    auto res4 = greater(this->a4, this->b4);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->b4[i] < this->a4[i] ? -1 : 0, res4[i]);
+    auto resn = greater(this->an, this->bn);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->bn[i] < this->an[i] ? -1 : 0, resn[i]);
+  }
+};
+
+template <class T>
+struct geq_vectors : public math_array_fixture<T>
+{
+  void test()
+  {
+    using namespace ma;
+    auto res2 = geq(this->a2, this->b2);
+    for (int i = 0; i < 2; ++i)
+      TEST_EQ(this->b2[i] <= this->a2[i] ? -1 : 0, res2[i]);
+    auto res3 = geq(this->a3, this->b3);
+    for (int i = 0; i < 3; ++i)
+      TEST_EQ(this->b3[i] <= this->a3[i] ? -1 : 0, res3[i]);
+    auto res4 = geq(this->a4, this->b4);
+    for (int i = 0; i < 4; ++i)
+      TEST_EQ(this->b4[i] <= this->a4[i] ? -1 : 0, res4[i]);
+    auto resn = geq(this->an, this->bn);
+    for (int i = 0; i < NDIM; ++i)
+      TEST_EQ(this->bn[i] <= this->an[i] ? -1 : 0, resn[i]);
+  }
+};
+
+template <class T>
 struct abs_vectors : public math_array_fixture<T>
 {
   void test()
@@ -817,6 +905,10 @@ void run_typed_math_array_tests()
   divide_vectors<T>().test();
   min_vectors<T>().test();
   max_vectors<T>().test();
+  less_vectors<T>().test();
+  leq_vectors<T>().test();
+  greater_vectors<T>().test();
+  geq_vectors<T>().test();
   abs_vectors<T>().test();
   sqrt_vectors<T>().test();
   dot_vectors<T>().test();

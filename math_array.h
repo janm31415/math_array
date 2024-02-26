@@ -107,6 +107,18 @@ template <class T, std::size_t dim>
 std::array<T, dim> sqrt(const std::array<T, dim>& a);
 
 template <class T, std::size_t dim>
+std::array<int, dim> less(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<int, dim> leq(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<int, dim> greater(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
+std::array<int, dim> geq(const std::array<T, dim>& a, const std::array<T, dim>& b);
+
+template <class T, std::size_t dim>
 T dot(const std::array<T, dim>& a, const std::array<T, dim>& b);
 
 template <class T, std::size_t dim>
@@ -1138,6 +1150,131 @@ template <class T>
 std::array<T, 4> sqrt(const std::array<T, 4>& a) {
   using ::sqrt;
   return { static_cast<T>(sqrt(a[0])), static_cast<T>(sqrt(a[1])), static_cast<T>(sqrt(a[2])), static_cast<T>(sqrt(a[3])) };
+}
+
+////////////////////////////////
+// operator less
+////////////////////////////////
+
+template <class T>
+std::array<int, 2> less(const std::array<T, 2>& a, const std::array<T, 2>& b)
+{
+  return {{a[0] < b[0] ? -1 : 0, a[1] < b[1] ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 3> less(const std::array<T, 3>& a, const std::array<T, 3>& b)
+{
+  return {{a[0] < b[0] ? -1 : 0, a[1] < b[1] ? -1 : 0, a[2] < b[2] ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 4> less(const std::array<T, 4>& a, const std::array<T, 4>& b)
+{
+  return {{a[0] < b[0] ? -1 : 0, a[1] < b[1] ? -1 : 0, a[2] < b[2] ? -1 : 0, a[3] < b[3] ? -1 : 0}};
+}
+
+template <class T, std::size_t dim>
+std::array<int, dim> less(const std::array<T, dim>& a, const std::array<T, dim>& b)
+{
+  std::array<int, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = a[i] < b[i] ? -1 : 0;
+  return res;
+}
+
+////////////////////////////////
+// operator leq
+////////////////////////////////
+
+template <class T>
+std::array<int, 2> leq(const std::array<T, 2>& a, const std::array<T, 2>& b)
+{
+  return {{!(b[0] < a[0]) ? -1 : 0, !(b[1] < a[1]) ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 3> leq(const std::array<T, 3>& a, const std::array<T, 3>& b)
+{
+  return {{!(b[0] < a[0]) ? -1 : 0, !(b[1] < a[1]) ? -1 : 0, !(b[2] < a[2]) ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 4> leq(const std::array<T, 4>& a, const std::array<T, 4>& b)
+{
+  return {{!(b[0] < a[0]) ? -1 : 0, !(b[1] < a[1]) ? -1 : 0, !(b[2] < a[2]) ? -1 : 0, !(b[3] < a[3]) ? -1 : 0}};
+}
+
+template <class T, std::size_t dim>
+std::array<int, dim> leq(const std::array<T, dim>& a, const std::array<T, dim>& b)
+{
+  std::array<int, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = !(b[i] < a[i]) ? -1 : 0;
+  return res;
+}
+
+////////////////////////////////
+// operator greater
+////////////////////////////////
+
+
+template <class T>
+std::array<int, 2> greater(const std::array<T, 2>& a, const std::array<T, 2>& b)
+{
+  return {{b[0] < a[0] ? -1 : 0, b[1] < a[1] ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 3> greater(const std::array<T, 3>& a, const std::array<T, 3>& b)
+{
+  return {{b[0] < a[0] ? -1 : 0, b[1] < a[1] ? -1 : 0, b[2] < a[2] ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 4> greater(const std::array<T, 4>& a, const std::array<T, 4>& b)
+{
+  return {{b[0] < a[0] ? -1 : 0, b[1] < a[1] ? -1 : 0, b[2] < a[2] ? -1 : 0, b[3] < a[3] ? -1 : 0}};
+}
+
+template <class T, std::size_t dim>
+std::array<int, dim> greater(const std::array<T, dim>& a, const std::array<T, dim>& b)
+{
+  std::array<int, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = b[i] < a[i] ? -1 : 0;
+  return res;
+}
+
+////////////////////////////////
+// operator geq
+////////////////////////////////
+
+template <class T>
+std::array<int, 2> geq(const std::array<T, 2>& a, const std::array<T, 2>& b)
+{
+  return {{!(a[0] < b[0]) ? -1 : 0, !(a[1] < b[1]) ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 3> geq(const std::array<T, 3>& a, const std::array<T, 3>& b)
+{
+  return {{!(a[0] < b[0]) ? -1 : 0, !(a[1] < b[1]) ? -1 : 0, !(a[2] < b[2]) ? -1 : 0}};
+}
+
+template <class T>
+std::array<int, 4> geq(const std::array<T, 4>& a, const std::array<T, 4>& b)
+{
+  return {{!(a[0] < b[0]) ? -1 : 0, !(a[1] < b[1]) ? -1 : 0, !(a[2] < b[2]) ? -1 : 0, !(a[3] < b[3]) ? -1 : 0}};
+}
+
+template <class T, std::size_t dim>
+std::array<int, dim> geq(const std::array<T, dim>& a, const std::array<T, dim>& b)
+{
+  std::array<int, dim> res;
+  for (std::size_t i = 0; i < dim; ++i)
+    res[i] = !(a[i] < b[i]) ? -1 : 0;
+  return res;
 }
 
 ////////////////////////////////
