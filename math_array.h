@@ -312,6 +312,9 @@ template <class T>
 array4x4<T> make_scale3d(T scale_x, T scale_y, T scale_z);
 
 template <class T>
+array4x4<T> make_translation(const std::array<T, 3>& translation);
+
+template <class T>
 array4x4<T> make_translation(const std::array<T, 4>& translation);
 
 template <class T>
@@ -2123,6 +2126,12 @@ template <class T>
 array4x4<T> make_scale3d(T scale_x, T scale_y, T scale_z)
 {
   array4x4<T> m({{static_cast<T>(scale_x), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(scale_y), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(scale_z), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
+}
+
+template <class T>
+array4x4<T> make_translation(const std::array<T, 3>& translation)
+{
+  return make_translation(translation[0], translation[1], translation[2]);
 }
 
 template <class T>
