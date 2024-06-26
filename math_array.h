@@ -201,6 +201,19 @@ struct array4x4
     for (int i = 0; i < 16; ++i)
       f[i] = m[i];
   }
+  
+  template <typename T1>
+  array4x4(const array4x4<T1>& other) {
+    for (int i = 0; i < 16; ++i)
+      f[i] = static_cast<T>(other.f[i]);
+  }
+  
+  template <typename T1>
+  array4x4<T>& operator = (const array4x4<T1>& other) {
+    for (int i = 0; i < 16; ++i)
+      f[i] = static_cast<T>(other.f[i]);
+    return *this;
+  }
 };
 
 template <class T>
