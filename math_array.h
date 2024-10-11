@@ -134,6 +134,9 @@ template <class T, std::size_t dim>
 T dot(const std::array<T, dim>& a, const std::array<T, dim>& b);
 
 template <class T, std::size_t dim>
+T length_sqr(const std::array<T, dim>& a);
+
+template <class T, std::size_t dim>
 double length(const std::array<T, dim>& a);
 
 template <std::size_t dim>
@@ -1433,6 +1436,15 @@ T dot(const std::array<T, 3>& a, const std::array<T, 3>& b) {
 template <class T>
 T dot(const std::array<T, 4>& a, const std::array<T, 4>& b) {
   return static_cast<T>(a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]);
+}
+
+////////////////////////////////
+// operator length_sqr
+////////////////////////////////
+///
+template <class T, std::size_t dim>
+T length_sqr(const std::array<T, dim>& a) {
+  return dot(a,a);
 }
 
 ////////////////////////////////
