@@ -2150,7 +2150,8 @@ array4x4<T> make_rotation(const std::array<T, 4>& position, const std::array<T, 
 template <class T>
 array4x4<T> make_scale3d(T scale_x, T scale_y, T scale_z)
 {
-  return array4x4<T> m({{static_cast<T>(scale_x), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(scale_y), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(scale_z), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
+  array4x4<T> m({{static_cast<T>(scale_x), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(scale_y), static_cast<T>(0), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(scale_z), static_cast<T>(0)}}, {{static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)}});
+  return m;
 }
 
 template <class T>
